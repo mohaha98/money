@@ -7,6 +7,7 @@
 
 from tools.send_request import send_request
 from tools.logger import log
+from jsonpath import jsonpath
 def all_company_code():
     """
     获取所有股票
@@ -22,6 +23,22 @@ def all_company_code():
     response = send_request('get', url, data=payload)
     data = response.get('data').get('diff')
     print(data)
+
+
+def get_QuoteID(code):
+    """
+    获取QuoteID，东方财富专用入参
+    """
+    url = "https://searchadapter.eastmoney.com/api/suggest/get"
+    payload = {
+                    "input": code,
+                    "type": 14
+                }
+    response = send_request("GET", url, data=payload)
+    QuoteID=response.get('QuotationCodeTable').get('Data')[0].get('QuoteID')
+    print(QuoteID)
+    name=response.get('QuotationCodeTable').get('Data')[0].get('Name')
+    return [QuoteID,name]
 
 
 def get_detail():
@@ -42,7 +59,7 @@ def get_detail():
 
 def up_to_top():
     """
-    涨停池
+    涨停池的股票信息
     """
 
     url = "https://push2ex.eastmoney.com/getTopicZTPool"
@@ -56,6 +73,25 @@ def up_to_top():
                 }
     response = send_request("GET", url,data=payload)
     return response.get("data").get('pool')
+
+def up_to_top_code():
+    """
+    涨停池的股票信息
+    """
+
+    url = "https://push2ex.eastmoney.com/getTopicZTPool"
+    payload = {
+                    "ut": "7eea3edcaed734bea9cbfc24409ed989",
+                    "dpt": "wz.ztzt",
+                    "Pageindex": 0,
+                    "pagesize": 500,
+                    "sort": "fbt:asc",
+                    "date": 20241020
+                }
+
+    response = send_request("GET", url,data=payload)
+    print(jsonpath(response, '$.data.pool[*].c'))
+    return jsonpath(response, '$.data.pool[*].c')
 
 
 def contine_to_top_times(times):
@@ -81,7 +117,7 @@ def hs(m,n):
     print(f"换手率大于{n}的股票有：\n {GP_set}" )
 
 
-def pd_cjl():
+def pd_cjl(QuoteID,n):
     """
     涨停股票中，排队和成交量比例大于n的股票
     """
@@ -89,12 +125,26 @@ def pd_cjl():
     payload = {
                     "invt": 2,
                     "fltt": 1,
-                    "secid": "0.002272",
+                    "secid": QuoteID,
                     "dect": 1
                 }
-    response = send_request("GET", url,data=payload)
-    print(response)
+    response = send_request("GET", url,data=payload).get('data')
+    x=round(response.get('f20')/response.get('f47'),2)
+    if x>=n:
+        log.info(f'排队和成交量比例大于{n}的股票')
+        print(response.get('f58'))
+        return True
+
 
 
 if __name__ == '__main__':
-    pd_cjl()
+    codelist=[]
+    for code in up_to_top_code():
+        QuoteID=get_QuoteID(code)[0]
+        name=get_QuoteID(code)[1]
+        if pd_cjl(QuoteID, 0.1):
+            codelist.append(name)
+    print(codelist)
+
+
+
