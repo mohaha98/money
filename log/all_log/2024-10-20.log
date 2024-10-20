@@ -1,0 +1,9 @@
+[2024/10/20 12:34:31] - [INFO] - 111
+[2024/10/20 12:34:31] - [ERROR] - 2222
+[2024/10/20 12:34:31] - [CRITICAL] - 333
+[2024/10/20 13:10:11] - [ERROR] - url:https://12.push2.eastmoney.com/api/qt/clist/get--请求发生异常：Header part (1) from ('pn', 1) must be of type str or bytes, not <class 'int'>
+[2024/10/20 13:10:11] - [ERROR] - body:None
+[2024/10/20 13:10:11] - [ERROR] - response:None
+[2024/10/20 13:13:01] - [ERROR] - url:https://12.push2.eastmoney.com/api/qt/clist/get--请求发生异常：Header part (1) from ('pn', 1) must be of type str or bytes, not <class 'int'>
+[2024/10/20 13:13:01] - [ERROR] - body:None
+[2024/10/20 13:13:01] - [ERROR] - response:None
