@@ -57,7 +57,7 @@ def get_detail():
     print(response)
 
 
-def up_to_top():
+def up_to_top(date):
     """
     涨停池的股票信息
     """
@@ -69,12 +69,12 @@ def up_to_top():
                     "Pageindex": 0,
                     "pagesize": 500,
                     "sort": "fbt:asc",
-                    "date": 20241020
+                    "date": date
                 }
     response = send_request("GET", url,data=payload)
     return response.get("data").get('pool')
 
-def up_to_top_code():
+def up_to_top_code(date):
     """
     涨停池的股票信息
     """
@@ -86,7 +86,7 @@ def up_to_top_code():
                     "Pageindex": 0,
                     "pagesize": 500,
                     "sort": "fbt:asc",
-                    "date": 20241020
+                    "date": date
                 }
 
     response = send_request("GET", url,data=payload)
@@ -138,13 +138,14 @@ def pd_cjl(QuoteID,n):
 
 
 if __name__ == '__main__':
-    codelist=[]
-    for code in up_to_top_code():
-        QuoteID=get_QuoteID(code)[0]
-        name=get_QuoteID(code)[1]
-        if pd_cjl(QuoteID, 0.1):
-            codelist.append(name)
-    print(codelist)
+    # codelist=[]
+    # for code in up_to_top_code():
+    #     QuoteID=get_QuoteID(code)[0]
+    #     name=get_QuoteID(code)[1]
+    #     if pd_cjl(QuoteID, 0.1):
+    #         codelist.append(name)
+    # print(codelist)
+    up_to_top_code(20241021)
 
 
 
