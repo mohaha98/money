@@ -1,0 +1,3 @@
+[2024/10/21 14:24:19] - [ERROR] - url:https://searchadapter.eastmoney.com/api/suggest/get--请求发生异常：HTTPSConnectionPool(host='searchadapter.eastmoney.com', port=443): Max retries exceeded with url: /api/suggest/get?input=002272&type=14 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1007)')))
+[2024/10/21 14:24:19] - [ERROR] - body:{'input': '002272', 'type': 14}
+[2024/10/21 14:24:19] - [ERROR] - response:None
