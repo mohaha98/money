@@ -36,7 +36,7 @@ def get_QuoteID(code):
                 }
     response = send_request("GET", url, data=payload)
     QuoteID=response.get('QuotationCodeTable').get('Data')[0].get('QuoteID')
-    print(QuoteID)
+    # print(QuoteID)
     name=response.get('QuotationCodeTable').get('Data')[0].get('Name')
     return [QuoteID,name]
 
@@ -57,7 +57,7 @@ def get_detail():
     print(response)
 
 
-def up_to_top():
+def up_to_top(date):
     """
     涨停池的股票信息
     """
@@ -69,12 +69,12 @@ def up_to_top():
                     "Pageindex": 0,
                     "pagesize": 500,
                     "sort": "fbt:asc",
-                    "date": 20241020
+                    "date": date
                 }
     response = send_request("GET", url,data=payload)
     return response.get("data").get('pool')
 
-def up_to_top_code():
+def up_to_top_code(date):
     """
     涨停池的股票信息
     """
@@ -86,11 +86,11 @@ def up_to_top_code():
                     "Pageindex": 0,
                     "pagesize": 500,
                     "sort": "fbt:asc",
-                    "date": 20241020
+                    "date": date
                 }
 
     response = send_request("GET", url,data=payload)
-    print(jsonpath(response, '$.data.pool[*].c'))
+    # print(jsonpath(response, '$.data.pool[*].c'))
     return jsonpath(response, '$.data.pool[*].c')
 
 
@@ -117,7 +117,7 @@ def hs(m,n):
     print(f"换手率大于{n}的股票有：\n {GP_set}" )
 
 
-def pd_cjl(QuoteID,n):
+def pd_cjl(QuoteID,m,n):
     """
     涨停股票中，排队和成交量比例大于n的股票
     """
@@ -130,21 +130,24 @@ def pd_cjl(QuoteID,n):
                 }
     response = send_request("GET", url,data=payload).get('data')
     x=round(response.get('f20')/response.get('f47'),2)
-    if x>=n:
+    if m>=x>=n:
         log.info(f'排队和成交量比例大于{n}的股票')
-        print(response.get('f58'))
+        # print(response.get('f58'))
         return True
 
 
 
 if __name__ == '__main__':
     codelist=[]
-    for code in up_to_top_code():
+    up_to_top_code=up_to_top_code(20241021)
+    print(up_to_top_code)
+    for code in up_to_top_code:
         QuoteID=get_QuoteID(code)[0]
         name=get_QuoteID(code)[1]
-        if pd_cjl(QuoteID, 0.1):
+        if pd_cjl(QuoteID, 0.01,0.05):
             codelist.append(name)
     print(codelist)
+
 
 
 
