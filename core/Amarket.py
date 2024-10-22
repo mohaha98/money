@@ -166,24 +166,32 @@ if __name__ == '__main__':
         print(codelist)
 
 
-
+    #for code in tqdm(all_code,desc="当前进度",colour="green",unit="items"):
 
     def test():
         all_code=all_company_code()
         result=[]
-        for code in tqdm(all_code,desc="当前进度",colour="green",unit="items"):
-            today,yesterday=get_detail(code)
-            #######  名字        收盘           开盘           涨跌幅         成交量            最高
-            #价格大于8块
-            if 70>=float(today[1])>=8:
-                #今天成交量大于昨天成交量
-                if int(today[4])>int(yesterday[4]):
-                    #昨天和今天是涨的
-                    if float(yesterday[3])>0 and float(today[3])>0:
-                        if float(today[2])>float(yesterday[1]):
-                            result.append(today[0])
+        for code in all_code:
+            try:
+                today,yesterday=get_detail(code)
+                #######  名字        收盘           开盘           涨跌幅         成交量            最高
+                print(today[0])
+                    # 价格大于8块
+                if 70>=float(today[1])>=8:
+                    print('价格大于8块')
+                    #今天成交量大于昨天成交量
+                    if int(today[4])>int(yesterday[4]):
+                        print('今天成交量大于昨天成交量')
+                        #昨天和今天是涨的
+                        if float(yesterday[3])>0 and float(today[3])>0:
+                            print('昨天和今天是涨的')
+                            #跳涨
+                            if float(today[2])>float(yesterday[1]):
+                                print('跳涨')
+                                result.append(today[0])
+            except:
+                log.error(code)
         log.info(result)
-
 
     test()
 
