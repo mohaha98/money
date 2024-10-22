@@ -9,6 +9,7 @@ from tqdm import tqdm
 from tools.send_request import send_request
 from tools.logger import log
 from jsonpath import jsonpath
+from tools.send_email import send_email
 def all_company_code():
     """
     获取所有股票
@@ -182,8 +183,8 @@ if __name__ == '__main__':
                     #今天成交量大于昨天成交量
                     if int(today[4])>int(yesterday[4]):
                         print('今天成交量大于昨天成交量')
-                        #昨天和今天是涨的
-                        if float(yesterday[3])>0 and float(today[3])>0:
+                        #昨天和今天是红的
+                        if float(yesterday[1])>=float(yesterday[2]) and float(today[1])>float(today[2]):
                             print('昨天和今天是涨的')
                             #跳涨
                             if float(today[2])>float(yesterday[1]):
@@ -192,6 +193,7 @@ if __name__ == '__main__':
             except:
                 log.error(code)
         log.info(result)
+        send_email(str(result))
 
     test()
 
