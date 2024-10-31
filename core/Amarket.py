@@ -195,7 +195,7 @@ if __name__ == '__main__':
         log.info(result)
         send_email(str(result))
 
-    test()
+    zt_pd_cjl()
 
 
 
