@@ -143,7 +143,7 @@ def pd_cjl(QuoteID,n):
     try:
         x=round(response.get('f20')/response.get('f47'),2)
         if x>=n:
-            log.info(f'排队和成交量比例大于{n}的股票')
+            # log.info(f'排队和成交量比例大于{n}的股票')
             # print(response.get('f58'))
             return True
         else:
@@ -175,30 +175,31 @@ if __name__ == '__main__':
     def test():
         all_code=all_company_code()
         result=[]
-        for code in all_code:
+        for code in tqdm(all_code,desc="当前进度",colour="green",unit="items"):
             try:
                 today,yesterday=get_detail(code)
                 #######  名字        收盘           开盘           涨跌幅         成交量            最高
-                print(today[0])
+                # print(today[0])
                     # 价格大于8块
-                if 70>=float(today[1])>=8:
-                    print('价格大于8块')
+                if 40>=float(today[1])>=5:
+                    # print('价格大于8块')
                     #今天成交量大于昨天成交量
                     if int(today[4])>int(yesterday[4]):
-                        print('今天成交量大于昨天成交量')
+                        # print('今天成交量大于昨天成交量')
                         #昨天和今天是红的
                         if float(yesterday[1])>=float(yesterday[2]) and float(today[1])>float(today[2]):
-                            print('昨天和今天是涨的')
+                            # print('昨天和今天是涨的')
                             #跳涨
                             if float(today[2])>float(yesterday[1]):
-                                print('跳涨')
+                                # print('跳涨')
                                 result.append(today[0])
             except:
                 log.error(code)
         log.info(result)
         send_email(str(result))
 
-    zt_pd_cjl()
+    # zt_pd_cjl()
+    test()
 
 
 
