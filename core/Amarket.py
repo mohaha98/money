@@ -140,12 +140,15 @@ def pd_cjl(QuoteID,n):
                     "dect": 1
                 }
     response = send_request("GET", url,data=payload).get('data')
-    x=round(response.get('f20')/response.get('f47'),2)
-    if x>=n:
-        log.info(f'排队和成交量比例大于{n}的股票')
-        # print(response.get('f58'))
-        return True
-    else:
+    try:
+        x=round(response.get('f20')/response.get('f47'),2)
+        if x>=n:
+            log.info(f'排队和成交量比例大于{n}的股票')
+            # print(response.get('f58'))
+            return True
+        else:
+            return False
+    except:
         return False
 
 
@@ -157,9 +160,9 @@ if __name__ == '__main__':
         """
         codelist = []
         up_to_top_code1 = up_to_top_code(20241021)
-        print(up_to_top_code)
-        for code in up_to_top_code1:
-            print(code)
+        print(up_to_top_code1)
+        for code in tqdm(up_to_top_code1,desc="当前进度",colour="green",unit="items"):
+            # print(code)
             QuoteID = get_QuoteID(code)[0]
             name = get_QuoteID(code)[1]
             if pd_cjl(QuoteID, 0.1):
