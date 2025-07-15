@@ -31,9 +31,9 @@ def is_trend_pullback_star(df):
     # 条件3：十字星（实体极小，总波动不大）
     entity = abs(row['收盘价'] - row['开盘价'])
     total_range = row['最高价'] - row['最低价']
-    if entity / row['close'] > 0.005:  # 实体小于0.5%
+    if entity / row['收盘价'] > 0.005:  # 实体小于0.5%
         return False
-    if total_range / row['close'] > 0.04:  # 整体波动不大于4%
+    if total_range / row['收盘价'] > 0.04:  # 整体波动不大于4%
         return False
     return True
 
