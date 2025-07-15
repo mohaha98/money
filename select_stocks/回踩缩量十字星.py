@@ -44,6 +44,7 @@ def get_stock_data(stock_code):
         df.columns = ['date', 'open', 'close', 'high', 'low', 'volume']
         df['volume'] = df['volume'].astype(float)
         df = df.sort_values('date').reset_index(drop=True)
+        print(df)
         return df
     except:
         return None
@@ -97,6 +98,4 @@ def select_stocks():
 
 
 # 执行选股
-result = select_stocks()
-print("✅ 符合‘趋势回踩+缩量十字星’并通过过滤的股票：")
-print(result)
+get_stock_data('002466')
