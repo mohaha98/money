@@ -59,13 +59,8 @@ def get_detail(code):
               "klt":"101",
                "fqt":1}
     response = send_request("GET", url, data=payload)
-    today_kline=response.get('data').get('klines')[-1].split(",")
-    yesterday_kline = response.get('data').get('klines')[-2].split(",")
-    #######  名字        收盘           开盘           涨跌幅         成交量            最高            最低
-    today=[QuoteID[1],today_kline[1],today_kline[2],today_kline[8],today_kline[5],today_kline[3],today_kline[4]]
-    yesterday=[QuoteID[1],yesterday_kline[1],yesterday_kline[2],yesterday_kline[8],yesterday_kline[5],yesterday_kline[3],yesterday_kline[4]]
-    # print(today_kline,yesterday_kline)
-    return today,yesterday
+    kline=response.get('data').get('klines')[-200:]
+    print(kline)
 
 
 def up_to_top(date):
@@ -151,53 +146,7 @@ def pd_cjl(QuoteID,n):
 
 
 if __name__ == '__main__':
-    def zt_pd_cjl():
-        """
-        涨停股票中，排队和当前成交量比值大于0.1的所有股票名称
-        """
-        codelist = []
-        up_to_top_code1 = up_to_top_code(20241021)
-        print(up_to_top_code)
-        for code in up_to_top_code1:
-            print(code)
-            QuoteID = get_QuoteID(code)[0]
-            name = get_QuoteID(code)[1]
-            if pd_cjl(QuoteID, 0.1):
-                codelist.append(name)
-        print(codelist)
-
-
-    #for code in tqdm(all_code,desc="当前进度",colour="green",unit="items"):
-
-    def test():
-        all_code=all_company_code()
-        result=[]
-        for code in all_code:
-            try:
-                today,yesterday=get_detail(code)
-                #######  名字        收盘           开盘           涨跌幅         成交量            最高
-                print(today[0])
-                    # 价格大于8块
-                if 70>=float(today[1])>=8:
-                    print('价格大于8块')
-                    #今天成交量大于昨天成交量
-                    if int(today[4])>int(yesterday[4]):
-                        print('今天成交量大于昨天成交量')
-                        #昨天和今天是红的
-                        if float(yesterday[1])>=float(yesterday[2]) and float(today[1])>float(today[2]):
-                            print('昨天和今天是涨的')
-                            #跳涨
-                            if float(today[2])>float(yesterday[1]):
-                                print('跳涨')
-                                result.append(today[0])
-            except:
-                log.error(code)
-        log.info(result)
-        send_email(str(result))
-
-    zt_pd_cjl()
-
-
+    get_detail('002466')
 
 
 
