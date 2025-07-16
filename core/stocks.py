@@ -61,7 +61,7 @@ def filter_stocks(SZ_min = 62, SZ_max=200, HSL_min=1, HSL_max=15, LB_min=0, LB_m
 
 
 
-def get_kline(code):
+def get_kline_tushare(code):
     """
     股票详情 价格 开盘价 收盘价 量比等信息
     [名字，今天收盘价，今天开盘价，昨天开盘价，昨天收盘价，量比]
@@ -91,8 +91,7 @@ def get_kline(code):
 
 
 
-def get_kline_tushare(code):
-    pass
+def get_kline(code):
     today = datetime.today().strftime('%Y%m%d')
     date_100_days_ago = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
     pro = ts.pro_api()
@@ -119,3 +118,7 @@ if __name__ == '__main__':
     # print(get_kline('002466'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     print(get_kline_tushare('002466'))
+
+    # pro = ts.pro_api()
+    # df = pro.daily(ts_code='002466.SZ', start_date='20180701', end_date='20180718')
+    # print(df)

@@ -7,8 +7,13 @@ from tools.send_email import send_email
 from tools.logger import log
 
 def is_strong_pullback(df):
+
+
+    if len(df) < 30:
+        return False
     """
     判断是否符合“强势回踩 + 缩量止跌”选股模型
+    
     """
     # 价格、均线、涨幅
     close = df['收盘价']

@@ -75,7 +75,7 @@ def send_email(text):
         username='2351479720@qq.com',
         passwd='ydpbjewvkxbkeaib',
         recv=['mo952798@163.com'],
-        title='测试标题',
+        title='选股',
         content=text,
         ssl=True,
     )
