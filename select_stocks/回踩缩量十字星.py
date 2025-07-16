@@ -1,8 +1,11 @@
+from datetime import datetime
+from tools.logger import log
 from core.stocks import get_kline
 from core.stocks import filter_stocks
 from tqdm import tqdm
 from tools.send_email import send_email
 
+##回踩缩量十字星
 def is_trend_pullback_star(df):
     """
     判断是否满足趋势回踩 + 缩量十字星模型：
@@ -41,7 +44,7 @@ def is_trend_pullback_star(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks()
+    stock_list = filter_stocks(close_min=10)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
@@ -56,6 +59,7 @@ if __name__ == '__main__':
     # selected = select_stocks()
     # print("符合突破放量模型的股票：", selected)
     code=select_stocks()
-    print(code)
-    print(len(code))
-    send_email('回踩缩量十字星---：'+str(code))
+    now = datetime.today().strftime('%Y%m%d%H%M')
+    log.info(f'长度是{len(code)}')
+    log.info(f'{code}')
+    send_email(f'{now}缩量回踩十字星---： \n\n\n\n'+str(code))
