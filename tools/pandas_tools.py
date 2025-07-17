@@ -18,7 +18,7 @@ def parse_kline_to_dataframe(data: List[str]) -> pd.DataFrame:
         pandas.DataFrame，结构化的K线数据
     """
     # 定义列名（注意：顺序要和数据一致）
-    columns = ['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '成交额', '振幅', '涨跌额', '涨跌幅', '换手率']
+    columns = ['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '成交额', '振幅', '涨跌幅', '涨跌额', '换手率']
 
     # 拆分数据并转为结构化列表
     parsed_data = []
@@ -32,7 +32,8 @@ def parse_kline_to_dataframe(data: List[str]) -> pd.DataFrame:
 
     # 转换为 DataFrame
     df = pd.DataFrame(parsed_data, columns=columns)
-    return df
+    # 选择并返回指定字段
+    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
 
 
 if __name__ == '__main__':
