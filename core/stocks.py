@@ -36,7 +36,7 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 62, SZ_max=200, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=5,close_max=88):
+def filter_stocks(SZ_min = 78, SZ_max=400, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=5,close_max=88):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
