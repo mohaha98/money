@@ -1,3 +1,5 @@
+import re
+
 import akshare as ak
 from tqdm import tqdm
 from datetime import datetime, timedelta
@@ -20,6 +22,9 @@ def get_all_codes(remove_st=True, return_df=False):
     # 获取股票列表
     stock_df = ak.stock_info_a_code_name()
 
+    # ------------------ 过滤创业板 ------------------
+    stock_df = stock_df[~stock_df['code'].str.startswith('688')]
+    # ------------------ 过滤 ST 和退市 ------------------
     if remove_st:
         # 过滤 ST、*ST、退市股票
         stock_df = stock_df[
@@ -36,11 +41,12 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 78, SZ_max=400, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=5,close_max=88):
+def filter_stocks(SZ_min = 78, SZ_max=450, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=8,close_max=88):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
-
+    # ------------------ 过滤创业板 ------------------
+    df = df[~df['代码'].str.startswith('688')]
     # 去除ST股票（名称中含有ST或*ST）
     df = df[~df["名称"].str.contains("ST")]
 
@@ -67,7 +73,7 @@ def get_kline_east(code):
     [名字，今天收盘价，今天开盘价，昨天开盘价，昨天收盘价，量比]
     """
     today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=88)).strftime('%Y%m%d')
+    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     try:
         url = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
         payload = {'fields1':"f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13",
@@ -91,7 +97,7 @@ def get_kline_east(code):
 #get_kline_tushare
 def get_kline_tushare(code):
     today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
+    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     pro = ts.pro_api()
     df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date=today)
     df = df[::-1]
@@ -128,7 +134,7 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
     """
     # 获取数据
     today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=88)).strftime('%Y%m%d')
+    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     df = ak.stock_zh_a_hist(
         symbol=code,
         period="daily",
@@ -158,7 +164,7 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
 
 
 
-def get_kline(code, x='ak'):
+def get_kline(code, x='tu'):
     if x=='ea':
         return get_kline_east(code)
     if x=='tu':
@@ -174,6 +180,9 @@ if __name__ == '__main__':
     # print(get_kline('002466'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
-
-    df = get_kline("002466",'ak')
-    print(df)
+    codes=filter_stocks()
+    print(codes)
+    print(len(codes))
+    # df = get_kline("002466",'tu')
+    # print(df)
+    # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
