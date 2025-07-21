@@ -41,7 +41,7 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 78, SZ_max=450, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=8,close_max=88):
+def filter_stocks(SZ_min = 78, SZ_max=450, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=10,close_max=78):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
@@ -111,9 +111,9 @@ def get_kline_tushare(code):
         'open': '开盘价',
         'vol': '成交量',
         'amount': '成交额',
-        'pre_close':'昨收价',
-        'change':'涨跌额',
-        'pct_chg':'涨跌幅',
+        'pre_close': '昨收价',
+        'change': '涨跌额',
+        'pct_chg': '涨跌幅',
     })
     # 选择并返回指定字段
     return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
@@ -146,17 +146,17 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
     # 字段重命名为你需要的形式
     df.rename(columns={
         "日期": "日期",
-        "开盘":"开盘价",
-        "收盘":"收盘价",
-        "最高":"最高价",
-        "最低":"最低价",
-        "成交量":"成交量",
-        "成交额":"成交额",
-        "振幅":"振幅",
-        "涨跌幅":"涨跌幅",
-        "涨跌额":"涨跌额",
-        "换手率":"换手率",
-        "股票代码":"股票代码"
+        "开盘": "开盘价",
+        "收盘": "收盘价",
+        "最高": "最高价",
+        "最低": "最低价",
+        "成交量": "成交量",
+        "成交额": "成交额",
+        "振幅": "振幅",
+        "涨跌幅": "涨跌幅",
+        "涨跌额": "涨跌额",
+        "换手率": "换手率",
+        "股票代码": "股票代码"
     }, inplace=True)
 
     # 选择并返回指定字段
@@ -164,7 +164,7 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
 
 
 
-def get_kline(code, x='tu'):
+def get_kline(code, x='ak'):
     if x=='ea':
         return get_kline_east(code)
     if x=='tu':
@@ -172,17 +172,17 @@ def get_kline(code, x='tu'):
     if x=='ak':
         return get_kline_akshare(code)
     else:
-        return None
+        return get_kline_akshare(code)
 
 
 if __name__ == '__main__':
     pass
-    # print(get_kline('002466'))
+    print(get_kline('002466','ak'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
-    codes=filter_stocks()
-    print(codes)
-    print(len(codes))
+    # codes=filter_stocks()
+    # print(codes)
+    # print(len(codes))
     # df = get_kline("002466",'tu')
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')

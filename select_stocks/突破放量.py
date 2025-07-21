@@ -1,6 +1,4 @@
-# ------------------------------
-# 股票池过滤器：排除 ST、低价、小市值股票
-# ------------------------------
+
 from datetime import datetime
 from tools.logger import log
 from core.stocks import get_kline
@@ -39,7 +37,7 @@ if __name__  ==  '__main__':
     # print("符合突破放量模型的股票：", selected)
     code=select_stocks()
     now = datetime.today().strftime('%Y%m%d%H%M')
-    print(code)
-    print(len(code))
+    log.info(f'长度是{len(code)}')
+    log.info(f'{code}')
     send_email(f'{now}突破放量---： \n\n\n\n'+str(code))
 
