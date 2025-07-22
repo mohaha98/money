@@ -44,7 +44,7 @@ def is_trend_pullback_star(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=15)
+    stock_list = filter_stocks(close_min=12)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
