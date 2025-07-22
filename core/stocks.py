@@ -181,7 +181,7 @@ def get_kline(code, x='tu'):
 
 if __name__ == '__main__':
     pass
-    print(get_kline('600580','tu'))
+    print(get_kline('600580','ak'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
