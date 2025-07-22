@@ -73,11 +73,13 @@ def select_stocks():
     return result
 
 if __name__ == '__main__':
+    pass
+    print("""""""""""""""禁用""""")
     # 执行选股
     # selected = select_stocks()
     # print("符合突破放量模型的股票：", selected)
-    code=select_stocks()
-    now = datetime.today().strftime('%Y%m%d%H%M')
-    log.info(f'长度是{len(code)}')
-    log.info(f'{code}')
-    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    # code=select_stocks()
+    # now = datetime.today().strftime('%Y%m%d%H%M')
+    # log.info(f'长度是{len(code)}')
+    # log.info(f'{code}')
+    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))

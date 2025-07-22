@@ -96,6 +96,10 @@ def get_kline_east(code):
 
 #get_kline_tushare
 def get_kline_tushare(code):
+    """
+    获取tushare的k线数据，
+    数据有延迟，下午五点后才会有当天的数据
+    """
     today = datetime.today().strftime('%Y%m%d')
     date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     pro = ts.pro_api()
@@ -177,7 +181,7 @@ def get_kline(code, x='ak'):
 
 if __name__ == '__main__':
     pass
-    print(get_kline('002466','ak'))
+    print(get_kline('600580','ak'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
