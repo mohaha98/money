@@ -41,7 +41,7 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 78, SZ_max=450, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=10,close_max=78):
+def filter_stocks(SZ_min = 78, SZ_max=1800, HSL_min=1, HSL_max=15, LB_min=0, LB_max=100, close_min=10,close_max=78):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
@@ -181,7 +181,7 @@ def get_kline(code, x='ak'):
 
 if __name__ == '__main__':
     pass
-    print(get_kline('600580','ak'))
+    print(get_kline('600580','tu'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()

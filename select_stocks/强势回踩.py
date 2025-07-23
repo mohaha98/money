@@ -74,7 +74,7 @@ def select_stocks():
 
 if __name__ == '__main__':
     pass
-    print("""""""""""""""禁用""""")
+    print("""""""""""""""已经禁用""""")
     # 执行选股
     # selected = select_stocks()
     # print("符合突破放量模型的股票：", selected)
