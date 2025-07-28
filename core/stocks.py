@@ -168,7 +168,8 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
 
 
 
-def get_kline(code, x='ak'):
+def get_kline(code, x=''
+                      ''):
     if x=='ea':
         return get_kline_east(code)
     if x=='tu':
