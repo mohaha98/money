@@ -117,7 +117,7 @@ def get_kline_tushare(code):
         'amount': '成交额',
         'pre_close': '昨收价',
         'change': '涨跌额',
-        'pct_chg': '涨跌幅',
+        'pct_chg': '涨跌幅'
     })
     # 选择并返回指定字段
     return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
