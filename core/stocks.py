@@ -103,7 +103,7 @@ def get_kline_tushare(code):
     today = datetime.today().strftime('%Y%m%d')
     date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     pro = ts.pro_api()
-    df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date=today)
+    df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date = today)
     df = df[::-1]
     # print(df.iloc[-1])
     df = df.rename(columns={
@@ -168,8 +168,7 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
 
 
 
-def get_kline(code, x=''
-                      ''):
+def get_kline(code, x='ak'):
     if x=='ea':
         return get_kline_east(code)
     if x=='tu':
@@ -182,7 +181,7 @@ def get_kline(code, x=''
 
 if __name__ == '__main__':
     pass
-    print(get_kline('600580','tu'))
+    print(get_kline('600580','ak'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
