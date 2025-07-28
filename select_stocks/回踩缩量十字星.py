@@ -20,6 +20,7 @@ def is_trend_pullback_star(df):
     df['ma10'] = df['收盘价'].rolling(10).mean()
     df['ma20'] = df['收盘价'].rolling(20).mean()
     df['avg_volume_5'] = df['成交量'].rolling(5).mean()
+    df['avg_volume_10'] = df['成交量'].rolling(10).mean()
 
     row = df.iloc[-1]
 
@@ -31,10 +32,16 @@ def is_trend_pullback_star(df):
     if row['成交量'] >= row['avg_volume_5']:
         return False
 
+    # # 条件4：前期有放量（过去15天中，任意一天成交量 > 10日均量 * 1.8）
+    # last_15 = df.iloc[-16:-1]
+    # has_volume_spike = (last_15['成交量'] > last_15['avg_volume_10'] * 1.8).any()
+    # if not has_volume_spike:
+    #     return False
+
     # 条件3：十字星（实体极小，总波动不大）
     entity = abs(row['收盘价'] - row['开盘价'])
     total_range = row['最高价'] - row['最低价']
-    if entity / row['收盘价'] > 0.005:  # 实体小于0.5%
+    if entity / row['收盘价'] > 0.006:  # 实体小于0.5%
         return False
     if total_range / row['收盘价'] > 0.04:  # 整体波动不大于4%
         return False
