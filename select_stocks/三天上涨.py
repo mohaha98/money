@@ -25,11 +25,15 @@ def is_up3_mild_trend(df):
     if not (last3['收盘价'].iloc[0] < last3['收盘价'].iloc[1] < last3['收盘价'].iloc[2]):
         return False
 
-    # 三天累计涨幅 ≤ 6%
+    # 条件2：三天都是红K线（阳线）
+    if not all(last3['收盘价'] > last3['开盘价']):
+        return False
+
+    # 三天累计涨幅
     close_now = df['收盘价'].iloc[-1]
     close_3day_ago = df['收盘价'].iloc[-4]
     change = (close_now / close_3day_ago) - 1
-    if change > 0.08 or change < 0.02:
+    if change > 0.078 or change < 0.028:
         return False
 
     # 多头排列
@@ -46,7 +50,7 @@ def select_stocks():
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
-        df = get_kline(code)
+        df = get_kline(code,x='tu')
         if df is not None and is_up3_mild_trend(df):
             result.append(code)
     return result
