@@ -164,7 +164,7 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
     }, inplace=True)
 
     # 选择并返回指定字段
-    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
+    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅','换手率']]
 
 
 
@@ -181,7 +181,7 @@ def get_kline(code, x='ak'):
 
 if __name__ == '__main__':
     pass
-    print(get_kline('600580','ak'))
+    print(get_kline('600580','tu'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
