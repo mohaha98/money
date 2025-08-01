@@ -15,7 +15,7 @@ def is_trend_pullback_star(df):
     """
     if len(df) < 30:
         return False
-
+    df = df.copy()
     df['ma5'] = df['收盘价'].rolling(5).mean()
     df['ma10'] = df['收盘价'].rolling(10).mean()
     df['ma20'] = df['收盘价'].rolling(20).mean()
@@ -45,6 +45,13 @@ def is_trend_pullback_star(df):
         return False
     if total_range / row['收盘价'] > 0.04:  # 整体波动不大于4%
         return False
+
+    # 条件4：过去15天中存在放量（放量日 > 当日10日均量 * 1.8）
+    last_15 = df.iloc[-16:-1].copy()
+    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
+    if not last_15['vol_spike'].any():
+        return False
+
     return True
 
 
@@ -69,4 +76,4 @@ if __name__ == '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}缩量回踩十字星---： \n\n\n\n'+str(code))
+    # send_email(f'{now}缩量回踩十字星---： \n\n\n\n'+str(code))

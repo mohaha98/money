@@ -25,7 +25,7 @@ def select_stocks():
     # stock_list=['002261']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
-        df = get_kline(code)
+        df = get_kline(code,'ak')
         if df is not None and is_breakout_volume(df):
             result.append(code)
     return result
