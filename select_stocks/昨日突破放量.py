@@ -27,7 +27,8 @@ def is_breakout_volume_01(df):
 
 def select_stocks():
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(LB_min=1.5, HSL_min=2.5, close_min=12)
+
+    stock_list = filter_stocks(LB_min=1.5, HSL_min=2, close_min=12)
     # stock_list=['600557']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
@@ -43,5 +44,5 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}昨日突破放量---： \n\n\n\n'+str(code))
+    # send_email(f'{now}昨日突破放量---： \n\n\n\n'+str(code))
 

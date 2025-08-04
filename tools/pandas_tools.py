@@ -33,7 +33,7 @@ def parse_kline_to_dataframe(data: List[str]) -> pd.DataFrame:
     # 转换为 DataFrame
     df = pd.DataFrame(parsed_data, columns=columns)
     # 选择并返回指定字段
-    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
+    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅','换手率']]
 
 
 if __name__ == '__main__':
