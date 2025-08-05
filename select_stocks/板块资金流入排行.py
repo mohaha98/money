@@ -32,24 +32,27 @@ def dc(trade_date):
     df = df[['日期', '板块', '涨跌幅', '净流入', '净流入最大股']].head(15)
     name_list = df['板块'].tolist()
     log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
-    send_email(f'{trade_date} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
+    # send_email(f'{trade_date} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
     # return name_list
 
-#板块流入
-# def ths1():
-#     pro = ts.pro_api()
-#     df = pro.moneyflow_ind_ths(trade_date='20250804')
-#     df = df.rename(columns={
-#         'industry': '板块',
-#         'net_amount': '净流入',
-#         'pct_change': '涨跌幅',
-#         'trade_date': '日期',
-#         # 'net_amount_rate':'净流入净占比',
-#         'lead_stock':'领涨股'
-#     })
-#     df = df.sort_values(by='净流入', ascending=False)
-#     df = df[['日期','板块', '涨跌幅', '净流入','领涨股']]
-#     print(df.head(10))
+# 板块流入
+def ths1(trade_date):
+    pro = ts.pro_api()
+    df = pro.moneyflow_ind_ths(trade_date=trade_date)
+    df = df.rename(columns={
+        'industry': '板块',
+        'net_amount': '净流入',
+        'pct_change': '涨跌幅',
+        'trade_date': '日期',
+        # 'net_amount_rate':'净流入净占比',
+        'lead_stock':'领涨股'
+    })
+    df = df.sort_values(by='净流入', ascending=False)
+    df = df[['日期','板块', '涨跌幅', '净流入','领涨股']].head(15)
+    name_list = df['板块'].tolist()
+    log.info(f'{trade_date}同花顺资金流入排名：\n{name_list}')
+    send_email(f'{trade_date} 同花顺资金流入排名： \n\n\n\n' + str(name_list))
+    # return name_list
 
 #概念行业资金流入
 def ths(trade_date):
@@ -105,7 +108,7 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d')
     # dc(now)
     # ths(now)
-    ths('20250805')
+    ths1('20250805')
     # ths('20250805')
     # ths('20250805')
     # ths('20250805')
