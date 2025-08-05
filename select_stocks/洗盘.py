@@ -28,6 +28,9 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
     if df.shape[0] < 30:
         return False  # 数据不足
 
+    #去掉当天日期的k线数据
+    df = df.iloc[:-4].copy()
+
     df = df.copy()
     df['ma5'] = df['收盘价'].rolling(5).mean()
     df['ma10'] = df['收盘价'].rolling(10).mean()
@@ -105,3 +108,4 @@ if __name__ == '__main__':
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
     send_email(f'{now}存在洗盘嫌疑： \n\n\n\n'+str(code))
+
