@@ -76,4 +76,4 @@ if __name__ == '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    # send_email(f'{now}缩量回踩十字星---： \n\n\n\n'+str(code))
+    send_email(f'{now}缩量回踩十字星---： \n\n\n\n'+str(code))
