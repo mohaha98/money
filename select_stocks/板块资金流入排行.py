@@ -31,9 +31,8 @@ def dc(trade_date):
     # print(df.head(15))
     df = df[['日期', '板块', '涨跌幅', '净流入', '净流入最大股']].head(15)
     name_list = df['板块'].tolist()
-    now = datetime.today().strftime('%Y%m%d')
-    log.info(f'东方财富资金流入排名： \n\n{name_list}')
-    send_email(f'{now} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
+    log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
+    send_email(f'{trade_date} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
     # return name_list
 
 #板块流入
@@ -67,9 +66,8 @@ def ths(trade_date):
     df = df.sort_values(by='净流入', ascending=False)
     df = df[['日期','板块', '涨跌幅', '净流入','领涨股']].head(15)
     name_list = df['板块'].tolist()
-    now = datetime.today().strftime('%Y%m%d')
-    log.info(f'同花顺资金流入排名：\n\n{name_list}')
-    send_email(f'{now} 同花顺资金流入排名： \n\n\n\n' + str(name_list))
+    log.info(f'{trade_date}同花顺资金流入排名：\n{name_list}')
+    send_email(f'{trade_date} 同花顺资金流入排名： \n\n\n\n' + str(name_list))
     # return name_list
 
 def gg_moneyflow_ths():
@@ -105,8 +103,17 @@ def gg_moneyflow_dc():
 if __name__  ==  '__main__':
     pass
     now = datetime.today().strftime('%Y%m%d')
-    dc(now)
-    ths(now)
+    # dc(now)
+    # ths(now)
+    ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
+    # ths('20250805')
     #20250805
 
 

@@ -1,6 +1,0 @@
-[2024/10/31 13:54:50] - [ERROR] - url:https://push2ex.eastmoney.com/getTopicZTPool--请求发生异常：HTTPSConnectionPool(host='push2ex.eastmoney.com', port=443): Max retries exceeded with url: /getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=fbt%3Aasc&date=20241031 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1007)')))
-[2024/10/31 13:54:50] - [ERROR] - body:{'ut': '7eea3edcaed734bea9cbfc24409ed989', 'dpt': 'wz.ztzt', 'Pageindex': 0, 'pagesize': 500, 'sort': 'fbt:asc', 'date': 20241031}
-[2024/10/31 13:54:50] - [ERROR] - response:None
-[2024/10/31 13:55:46] - [ERROR] - url:https://push2ex.eastmoney.com/getTopicZTPool--请求发生异常：HTTPSConnectionPool(host='push2ex.eastmoney.com', port=443): Max retries exceeded with url: /getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=500&sort=fbt%3Aasc&date=20241031 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1007)')))
-[2024/10/31 13:55:46] - [ERROR] - body:{'ut': '7eea3edcaed734bea9cbfc24409ed989', 'dpt': 'wz.ztzt', 'Pageindex': 0, 'pagesize': 500, 'sort': 'fbt:asc', 'date': 20241031}
-[2024/10/31 13:55:46] - [ERROR] - response:None

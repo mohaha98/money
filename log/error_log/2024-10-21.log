@@ -1,9 +1,0 @@
-[2024/10/21 14:24:19] - [ERROR] - url:https://searchadapter.eastmoney.com/api/suggest/get--请求发生异常：HTTPSConnectionPool(host='searchadapter.eastmoney.com', port=443): Max retries exceeded with url: /api/suggest/get?input=002272&type=14 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1007)')))
-[2024/10/21 14:24:19] - [ERROR] - body:{'input': '002272', 'type': 14}
-[2024/10/21 14:24:19] - [ERROR] - response:None
-[2024/10/21 21:36:13] - [ERROR] - url:https://searchadapter.eastmoney.com/api/suggest/get--请求发生异常：HTTPSConnectionPool(host='searchadapter.eastmoney.com', port=443): Max retries exceeded with url: /api/suggest/get?input=002272&type=14 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1007)')))
-[2024/10/21 21:36:13] - [ERROR] - body:{'input': '002272', 'type': 14}
-[2024/10/21 21:36:13] - [ERROR] - response:None
-[2024/10/21 21:36:44] - [ERROR] - url:https://push2.eastmoney.com/api/qt/stock/get--请求发生异常：HTTPSConnectionPool(host='push2.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/get?invt=2&fltt=1&secid=0.002272&dect=1 (Caused by ProxyError('Unable to connect to proxy', NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000196426CBEE0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。')))
-[2024/10/21 21:36:44] - [ERROR] - body:{'invt': 2, 'fltt': 1, 'secid': '0.002272', 'dect': 1}
-[2024/10/21 21:36:44] - [ERROR] - response:None
