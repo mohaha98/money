@@ -86,7 +86,7 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=15,SZ_min=110,HSL_min=0.5,close_max=50)
+    stock_list = filter_stocks(close_min=15,SZ_min=110,HSL_min=0.5,close_max=60)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
