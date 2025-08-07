@@ -106,9 +106,10 @@ def gg_moneyflow_dc():
 if __name__  ==  '__main__':
     pass
     now = datetime.today().strftime('%Y%m%d')
+    # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     # dc(now)
     # ths(now)
-    dc('20250806')
+    ths('20250807')
     # ths('20250805')
     # ths('20250805')
     # ths('20250805')
