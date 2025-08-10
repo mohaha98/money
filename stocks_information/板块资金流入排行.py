@@ -39,7 +39,7 @@ def dc(trade_date):
 
 # 板块流入
 def ths1(trade_date):
-    print('---------------------同花顺概念资金流入--------------------')
+    print('---------------------同花顺板块资金流入--------------------')
     pro = ts.pro_api()
     df = pro.moneyflow_ind_ths(trade_date=trade_date)
     df = df.rename(columns={
@@ -60,7 +60,7 @@ def ths1(trade_date):
 
 #概念行业资金流入
 def ths(trade_date):
-    print('---------------------同花顺板块资金流入--------------------')
+    print('---------------------同花顺概念资金流入--------------------')
     pro = ts.pro_api()
     df = pro.moneyflow_cnt_ths(trade_date=trade_date)
     df = df.rename(columns={
@@ -117,10 +117,8 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d')
     date='20250808'
     dc(date)
-    ths1(date)
-    ths(date)
     gg_moneyflow_dc(date)
-    # gg_moneyflow_ths(date)
+
 
 
 
