@@ -18,7 +18,8 @@ def get_introduction(code):
     else:
         code=get_stock_code_by_name(code)
     df = pro.stock_company(ts_code=code, fields='ts_code,introduction,main_business,business_scope,province,com_name')
-    introduction=df['introduction'][0]
+    print(df)
+    # introduction=df['introduction'][0]
     business_scope=df['business_scope'][0]
     main_business = df['main_business'][0]
     print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}")
@@ -64,5 +65,5 @@ def get_information(code):
 if __name__  ==  '__main__':
     # get_information('紫光国')
 
-    get_information('紫光国')
-
+    # get_information('000938')
+    get_information('000938')
