@@ -5,7 +5,21 @@ from tools.send_request import send_request
 
 pro = ts.pro_api()
 
-def gntc_dc(code):
+
+def get_stock_code_by_name(code):
+    if any(char.isdigit() for char in code):
+        pass
+    else:
+        today = datetime.today().strftime('%Y%m%d')
+        df = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
+        result = df[df['name'].str.contains(code)].iloc[0]['ts_code']
+        code=result.split('.')[0]
+    ts_code = f"{code}.{'SH' if code.startswith('6') else 'SZ'}"
+    return ts_code
+
+
+
+def hxtc_dc(code):
     """
 核心题材
     """
@@ -30,37 +44,7 @@ def gntc_dc(code):
         return None
 
 
-def rqlt_dc(code):
-    """
-板块人气龙头
-输入东方财富板块编码 BK开头
-    """
-    try:
-        url = "https://datacenter.eastmoney.com/securities/api/data/get"
-        payload = {'type':"RTP_F10_POPULAR_LEADING",
-                   "sty":"SECUCODE,SECURITY_NAME_ABBR",
-                   "extraCols": 'f2~01~SECURITY_CODE~NEWEST_PRICE,f3~01~SECURITY_CODE~YIELD',
-                   "params": f"{code.replace('K','I')}",
-                   "source": "HSF10",
-                   'client':'PC'}
-        haed={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'}
-        response = send_request("GET", url, data=payload,headers=haed).get('result')
-        print('----------------人气龙头--------------')
-        for item in response:
-            print(f"{item['SECURITY_NAME_ABBR']}--涨幅：{item['YIELD']}%")
-    except:
-        return None
 
-def get_stock_code_by_name(code):
-    if any(char.isdigit() for char in code):
-        pass
-    else:
-        today = datetime.today().strftime('%Y%m%d')
-        df = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
-        result = df[df['name'].str.contains(code)].iloc[0]['ts_code']
-        code=result.split('.')[0]
-    ts_code = f"{code}.{'SH' if code.startswith('6') else 'SZ'}"
-    return ts_code
 
 #或者
 #pro = ts.pro_api('your token')
@@ -103,16 +87,11 @@ def money_go(code):
 
 
 def get_information(code):
-
     get_introduction(code)
     get_forecast(code)
     money_go(code)
-    gntc_dc(code)
+    hxtc_dc(code)
 
 if __name__  ==  '__main__':
-    # get_information('紫光国')
-
     # get_information('000938')
-    get_information('柯力传感')
-    # gntc_dc('柯力传感')
-    # rqlt_dc('BK0424')
+    get_information('阳光电源')
