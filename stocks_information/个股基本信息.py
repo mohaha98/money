@@ -65,6 +65,9 @@ def get_forecast(code):
     print('---------------------业绩情况--------------------')
     code=get_stock_code_by_name(code)
     df = pro.forecast_vip(ts_code=code,fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
+    #预披露日期
+    pre_date = pro.disclosure_date(ts_code=code).sort_values(by='pre_date', ascending=False).iloc[0]['pre_date']
+    print(f'预披露日期：{pre_date}')
     print(f"{df['ann_date'][0]}业绩预告:{df['type'][0]}({df['p_change_min'][0]}%)")
     print(f"{df['ann_date'][1]}:{df['type'][1]}")
     df1 = pro.fina_mainbz(ts_code=code, type='P',fields='end_date,bz_item,bz_cost').iloc[:12]
@@ -83,7 +86,7 @@ def money_go(code):
     df = pro.moneyflow_dc(ts_code=code).iloc[0]
     # df2 = pro.moneyflow_dc(ts_code=code, trade_date=today).iloc[0]
     # print(df)
-    print(f"{df['trade_date']}净流入 {df['net_amount']}万元")
+    print(f"{df['trade_date']}净流入 {df['net_amount']}万")
 
 
 def get_information(code):
@@ -94,4 +97,4 @@ def get_information(code):
 
 if __name__  ==  '__main__':
     # get_information('000938')
-    get_information('阳光电源')
+    get_information('紫光股份')
