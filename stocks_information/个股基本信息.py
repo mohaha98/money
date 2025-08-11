@@ -55,8 +55,15 @@ def get_introduction(code):
     # introduction=df['introduction'][0]
     business_scope=df['business_scope'][0]
     main_business = df['main_business'][0]
+    #查市值 当前价格
+    sz = pro.daily_basic(
+        ts_code=code,  # 空表示取所有股票
+        # trade_date='20250811',
+        fields='ts_code,trade_date,total_mv,circ_mv,close'
+    ).sort_values(by='total_mv', ascending=False).sort_values(by='trade_date', ascending=False).iloc[0]
+
     print('---------------------基本信息--------------------')
-    print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}")
+    print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}  市值{int(sz['total_mv']/ 10000)}亿   当前价格：{sz['close']}" )
     # print(f'公司介绍：{introduction}')
     print(f'业务产品：{main_business}')
     # print(f'经营范围：{business_scope}')
@@ -64,7 +71,7 @@ def get_introduction(code):
 def get_forecast(code):
     print('---------------------业绩情况--------------------')
     code=get_stock_code_by_name(code)
-    df = pro.forecast_vip(ts_code=code,fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
+    df = pro.forecast_vip(ts_code=code,fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:4]
     #预披露日期
     pre_date = pro.disclosure_date(ts_code=code).sort_values(by='pre_date', ascending=False).iloc[0]['pre_date']
     print(f'预披露日期：{pre_date}')
@@ -97,4 +104,6 @@ def get_information(code):
 
 if __name__  ==  '__main__':
     # get_information('000938')
-    get_information('紫光股份')
+    get_information('科士达')
+
+

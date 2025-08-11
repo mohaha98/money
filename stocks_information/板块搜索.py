@@ -97,5 +97,5 @@ def rqlt_dc(code):
 
 if __name__ == '__main__':
     pass
-    get_bkid('锂矿概念')
+    get_bkid('动力')
 

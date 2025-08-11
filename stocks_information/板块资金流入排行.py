@@ -32,8 +32,8 @@ def dc(trade_date):
     # print(df.head(15))
     df = df[['日期', '板块', '涨跌幅', '净流入', '净流入最大股']].head(15)
     print(df)
-    # name_list = df['板块'].tolist()
-    # log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
+    name_list = df['板块'].tolist()
+    log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
     # send_email(f'{trade_date} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
     # return name_list
 
