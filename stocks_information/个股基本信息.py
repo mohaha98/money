@@ -104,6 +104,6 @@ def get_information(code):
 
 if __name__  ==  '__main__':
     # get_information('000938')
-    get_information('603033')
+    get_information('紫光股份')
 
 

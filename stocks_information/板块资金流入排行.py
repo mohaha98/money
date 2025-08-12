@@ -4,6 +4,7 @@
 文件名： 板块资金流入排行.py
 功能作用： 
 =================不积小流无以成江海=================="""
+import pandas as pd
 
 from tools.send_email import send_email
 import tushare as ts
@@ -28,12 +29,13 @@ def dc(trade_date):
         # 'net_amount_rate':'净流入净占比',
         'buy_sm_amount_stock':'净流入最大股'
     })
-    df = df.sort_values(by='涨跌幅', ascending=False)
+    df['净流入(亿)'] = df['净流入']/1e8
+    df = df.sort_values(by='净流入', ascending=False)
     # print(df.head(15))
-    df = df[['日期', '板块', '涨跌幅', '净流入', '净流入最大股']].head(15)
+    df = df[['日期', '板块', '涨跌幅', '净流入(亿)', '净流入最大股']].head(12)
     print(df)
     name_list = df['板块'].tolist()
-    log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
+    # log.info(f'{trade_date}东方财富资金流入排名： \n{name_list}')
     # send_email(f'{trade_date} 东方财富资金流入排名： \n\n\n\n' + str(name_list))
     # return name_list
 
@@ -113,10 +115,14 @@ def gg_moneyflow_dc(date):
 
 if __name__  ==  '__main__':
     pass
+    pd.set_option('display.max_colwidth', 20)
+    pd.set_option('display.float_format', '{:.2f}'.format)
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     now = datetime.today().strftime('%Y%m%d')
     date='20250812'
     dc(date)
+    ths1(date)
+    ths(date)
     gg_moneyflow_dc(date)
 
 

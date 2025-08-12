@@ -77,7 +77,7 @@ def rqlt_dc(code):
                    "fid": 'f62',
                    'pn':1,
                    'po':1,
-                   'pz':6,
+                   'pz':10,
                    'ut':'fa5fd1943c7b386f172d6893dbfba10b',
                    'wbp2u':'|0|0|0|web',
                   'fs':f'b:{code}'}
@@ -97,5 +97,5 @@ def rqlt_dc(code):
 
 if __name__ == '__main__':
     pass
-    get_bkid('')
+    get_bkid('算力概念')
 
