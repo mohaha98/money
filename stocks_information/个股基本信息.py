@@ -66,7 +66,7 @@ def get_introduction(code):
     print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}  市值{int(sz['total_mv']/ 10000)}亿   当前价格：{sz['close']}" )
     # print(f'公司介绍：{introduction}')
     print(f'业务产品：{main_business}')
-    # print(f'经营范围：{business_scope}')
+    print(f'经营范围：{business_scope}')
 
 def get_forecast(code):
     print('---------------------业绩情况--------------------')
@@ -104,6 +104,6 @@ def get_information(code):
 
 if __name__  ==  '__main__':
     # get_information('000938')
-    get_information('科士达')
+    get_information('603033')
 
 

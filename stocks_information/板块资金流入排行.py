@@ -28,7 +28,7 @@ def dc(trade_date):
         # 'net_amount_rate':'净流入净占比',
         'buy_sm_amount_stock':'净流入最大股'
     })
-    df = df.sort_values(by='净流入', ascending=False)
+    df = df.sort_values(by='涨跌幅', ascending=False)
     # print(df.head(15))
     df = df[['日期', '板块', '涨跌幅', '净流入', '净流入最大股']].head(15)
     print(df)
@@ -115,7 +115,7 @@ if __name__  ==  '__main__':
     pass
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     now = datetime.today().strftime('%Y%m%d')
-    date='20250808'
+    date='20250812'
     dc(date)
     gg_moneyflow_dc(date)
 

@@ -21,12 +21,22 @@ def is_strong_pullback(df):
     high = df['最高价']
     low = df['最低价']
     vol = df['成交量']
+    df['ma5'] = df['收盘价'].rolling(5).mean()
+    df['ma10'] = df['收盘价'].rolling(10).mean()
+    df['ma20'] = df['收盘价'].rolling(20).mean()
+    df['avg_volume_5'] = df['成交量'].rolling(5).mean()
+    df['avg_volume_10'] = df['成交量'].rolling(10).mean()
     # -------- 1. 前期上涨 10日涨幅 > 20%--------
 
-    up_5 = close.iloc[-1] / close.iloc[-6] - 1
-    up_10 = close.iloc[-1] / close.iloc[-11] - 1
+    # 条件1：均线多头排列 + 收盘价在MA20上方
+    row = df.iloc[-1]
+    if not (row['ma5'] > row['ma10'] > row['ma20'] and row['收盘价'] > row['ma20']):
+        return False
 
-    if up_5 < 0.06 and up_10 < 0.10:
+    # 条件4：过去15天中存在放量（放量日 > 当日10日均量 * 1.8）
+    last_15 = df.iloc[-16:-1].copy()
+    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
+    if not last_15['vol_spike'].any():
         return False
 
     # -------- 2. 均线回踩 --------
@@ -39,7 +49,7 @@ def is_strong_pullback(df):
         return False
 
     # -------- 3. 缩量判断 --------
-    if vol.iloc[-1] >= vol.iloc[-2] or vol.iloc[-1] >= vol.iloc[-6:-1].mean():
+    if vol.iloc[-1] >= vol.iloc[-2]*1.3 or vol.iloc[-1] >= vol.iloc[-6:-1].mean():
         return False
 
     # -------- 4. 止跌形态判断 --------
