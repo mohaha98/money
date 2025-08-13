@@ -109,7 +109,7 @@ if __name__  ==  '__main__':
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     # dc(now)
     # ths(now)
-    ths('20250807')
+    ths('20250808')
     # ths('20250805')
     # ths('20250805')
     # ths('20250805')
