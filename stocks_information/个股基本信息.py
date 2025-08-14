@@ -103,11 +103,8 @@ def get_information(code):
     hxtc_dc(code)
 
 if __name__  ==  '__main__':
-    # get_information('000938')
-<<<<<<< HEAD
-    get_information('四方精创')
-=======
-    get_information('和而泰')
->>>>>>> b0a6569d9b1c3944abd600dd1f9e157d9821b9ec
+    get_information('000938')
+
+
 
 
