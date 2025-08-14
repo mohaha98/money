@@ -103,7 +103,7 @@ def get_information(code):
     hxtc_dc(code)
 
 if __name__  ==  '__main__':
-    # get_information('000938')
-    get_information('300735')
+
+    get_information('000938')
 
 
