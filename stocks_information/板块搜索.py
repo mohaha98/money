@@ -97,5 +97,5 @@ def rqlt_dc(code):
 
 if __name__ == '__main__':
     pass
-    get_bkid('量子')
+    get_bkid('AI')
 

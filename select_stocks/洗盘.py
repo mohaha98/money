@@ -28,7 +28,7 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
     if df.shape[0] < 30:
         return False  # 数据不足
 
-    #去掉当天日期的k线数据
+
     df = df.iloc[:-4].copy()
 
     df = df.copy()
