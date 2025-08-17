@@ -7,7 +7,7 @@ from tools.pandas_tools import parse_kline_to_dataframe
 from tools.send_request import send_request
 import pandas as pd
 import tushare as ts
-
+pro = ts.pro_api()
 def get_all_codes(remove_st=True, return_df=False):
     """
     获取沪深A股所有股票代码（可选择是否排除 ST 和退市股）
@@ -178,7 +178,24 @@ def get_kline(code, x='ak'):
     else:
         return get_kline_akshare(code)
 
+def get_stock_code_by_name(code):
+    if any(char.isdigit() for char in code):
+        pass
+    else:
+        today = datetime.today().strftime('%Y%m%d')
+        df = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
+        result = df[df['name'].str.contains(code)].iloc[0]['ts_code']
+        code=result.split('.')[0]
+    ts_code = f"{code}.{'SH' if code.startswith('6') else 'SZ'}"
+    return ts_code
 
+def is_up_yj(code):
+    df = pro.forecast_vip(ts_code=code,
+                          fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
+    if df['p_change_min'][0] >= 10:
+        return True
+    else:
+        return False
 if __name__ == '__main__':
     pass
     print(get_kline('600580','tu'))

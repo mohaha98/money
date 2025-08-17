@@ -9,7 +9,7 @@ import pandas as pd
 from datetime import datetime
 from tools.logger import log
 from core.stocks import get_kline
-from core.stocks import filter_stocks
+from core.stocks import filter_stocks,is_up_yj
 from tqdm import tqdm
 from tools.send_email import send_email
 
@@ -95,7 +95,8 @@ def select_stocks():
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
         if df is not None and is_possible_washout_with_turnover(df):
-            result.append(code)
+            if is_up_yj(code):
+                result.append(code)
     return result
 
 
