@@ -192,7 +192,7 @@ def get_stock_code_by_name(code):
 def is_up_yj(code):
     df = pro.forecast_vip(ts_code=code,
                           fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
-    if df['p_change_min'][0] >= 10:
+    if df['p_change_min'][0] >= 18:
         return True
     else:
         return False
