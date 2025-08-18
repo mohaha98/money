@@ -2,7 +2,7 @@
 from datetime import datetime
 from tools.logger import log
 from core.stocks import get_kline
-from core.stocks import filter_stocks
+from core.stocks import filter_stocks,is_up_yj
 from tqdm import tqdm
 from tools.send_email import send_email
 
@@ -27,7 +27,9 @@ def select_stocks():
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code,'ak')
         if df is not None and is_breakout_volume(df):
-            result.append(code)
+            ##业绩涨的
+            if is_up_yj(code):
+                result.append(code)
     return result
 
 if __name__  ==  '__main__':
@@ -38,5 +40,5 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    # send_email(f'{now}突破放量---： \n\n\n\n'+str(code))
+    send_email(f'{now}突破放量---： \n\n\n\n'+str(code))
 

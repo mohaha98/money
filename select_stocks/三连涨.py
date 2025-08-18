@@ -1,7 +1,7 @@
 from datetime import datetime
 from tools.logger import log
 from core.stocks import get_kline
-from core.stocks import filter_stocks
+from core.stocks import filter_stocks,is_up_yj
 from tqdm import tqdm
 from tools.send_email import send_email
 
@@ -46,13 +46,14 @@ def is_up3_mild_trend(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=15,SZ_min=99)
+    stock_list = filter_stocks(close_min=15,SZ_min=120)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code,x='ak')
         if df is not None and is_up3_mild_trend(df):
-            result.append(code)
+            if is_up_yj(code):
+                result.append(code)
     return result
 
 
