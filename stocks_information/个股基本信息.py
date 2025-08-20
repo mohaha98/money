@@ -102,9 +102,7 @@ def get_information(code):
     money_go(code)
     hxtc_dc(code)
 
-if __name__  ==  '__main__':
-
-
+if __name__  ==  '__main__' :
     get_information('002080')
 
 
