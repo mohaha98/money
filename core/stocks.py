@@ -196,9 +196,18 @@ def is_up_yj(code):
         return True
     else:
         return False
+
+def is_up_yj2(code):
+    df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
+    up = float(df.replace('%', ''))
+    if up >= 12:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     pass
-    print(get_kline('600580','tu'))
+    # print(get_kline('600580','tu'))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
@@ -207,3 +216,9 @@ if __name__ == '__main__':
     # df = get_kline("002466",'tu')
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
+      # 茅台示例
+    df = ak.stock_financial_abstract_ths(symbol='603166').sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
+    up = float(df.replace('%', ''))
+    print(up)
+
+
