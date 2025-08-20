@@ -189,6 +189,7 @@ def get_stock_code_by_name(code):
     ts_code = f"{code}.{'SH' if code.startswith('6') else 'SZ'}"
     return ts_code
 
+#判断业绩
 def is_up_yj(code):
     df = pro.forecast_vip(ts_code=code,
                           fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
@@ -217,7 +218,7 @@ if __name__ == '__main__':
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
       # 茅台示例
-    df = ak.stock_financial_abstract_ths(symbol='603166').sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
+    df = ak.stock_financial_abstract_ths(symbol='601869').sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
     up = float(df.replace('%', ''))
     print(up)
 
