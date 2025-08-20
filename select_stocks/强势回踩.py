@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from core.stocks import get_kline
-from core.stocks import filter_stocks,is_up_yj,is_up_yj2
+from core.stocks import filter_stocks,is_up_yj
 from tqdm import tqdm
 from tools.send_email import send_email
 from tools.logger import log
@@ -80,7 +80,7 @@ def select_stocks():
         df = get_kline(code)
         if df is not None and is_strong_pullback(df):
             ##业绩涨的
-            if is_up_yj2(code):
+            if is_up_yj(code):
                 result.append(code)
     return result
 

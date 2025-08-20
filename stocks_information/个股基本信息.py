@@ -2,7 +2,8 @@ import tushare as ts
 from datetime import datetime, timedelta
 from tools.logger import log
 from tools.send_request import send_request
-
+from core.stocks import is_up_yj
+import akshare as ak
 pro = ts.pro_api()
 
 
@@ -71,12 +72,12 @@ def get_introduction(code):
 def get_forecast(code):
     print('---------------------业绩情况--------------------')
     code=get_stock_code_by_name(code)
-    df = pro.forecast_vip(ts_code=code,fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:4]
+    df = ak.stock_financial_abstract_ths(symbol=code[:-3]).sort_values(by='报告期', ascending=False).iloc[0][
+        '净利润同比增长率']
     #预披露日期
     pre_date = pro.disclosure_date(ts_code=code).sort_values(by='pre_date', ascending=False).iloc[0]['pre_date']
     print(f'预披露日期：{pre_date}')
-    print(f"{df['ann_date'][0]}业绩预告:{df['type'][0]}({df['p_change_min'][0]}%)")
-    print(f"{df['ann_date'][1]}:{df['type'][1]}")
+    print(f"上一个业绩：{float(df.replace('%', ''))}%")
     df1 = pro.fina_mainbz(ts_code=code, type='P',fields='end_date,bz_item,bz_cost').iloc[:12]
     # 2. 筛选出所有 end_date 与第一条相同的记录
     filtered_df = df1[df1['end_date'] == df1.iloc[0]['end_date']]
@@ -103,7 +104,7 @@ def get_information(code):
     hxtc_dc(code)
 
 if __name__  ==  '__main__' :
-    get_information('002080')
+    get_information('300661')
 
 
 

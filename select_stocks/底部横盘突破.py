@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from core.stocks import get_kline
-from core.stocks import filter_stocks,is_up_yj,is_up_yj2
+from core.stocks import filter_stocks,is_up_yj
 from tqdm import tqdm
 from tools.send_email import send_email
 from tools.logger import log

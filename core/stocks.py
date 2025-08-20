@@ -104,6 +104,7 @@ def get_kline_tushare(code):
     date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
     pro = ts.pro_api()
     df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date = today)
+    # print(df)
     df = df[::-1]
     # print(df.iloc[-1])
     df = df.rename(columns={
@@ -190,19 +191,12 @@ def get_stock_code_by_name(code):
     return ts_code
 
 #判断业绩
-def is_up_yj(code):
-    df = pro.forecast_vip(ts_code=code,
-                          fields='ts_code,ann_date,end_date,type,p_change_min,p_change_max,net_profit_min').iloc[:2]
-    # print(df['p_change_min'][0])
-    if df['p_change_min'][0] >= 18:
-        return True
-    else:
-        return False
 
-def is_up_yj2(code):
+def is_up_yj(code):
+    code=get_stock_code_by_name(code)[:-3]
     df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
     up = float(df.replace('%', ''))
-    if up >= 12:
+    if up >= 9.9:
         return True
     else:
         return False
@@ -211,7 +205,7 @@ if __name__ == '__main__':
     pass
     # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-    print(get_kline('600580','tu'))
+    # print(get_kline('600580','tu'))
 
     # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
@@ -221,7 +215,6 @@ if __name__ == '__main__':
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
       # 茅台示例
-    # is_up_yj('柯力传感')
-
+    is_up_yj('300661')
 
 
