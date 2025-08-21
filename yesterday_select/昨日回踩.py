@@ -40,5 +40,5 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    # send_email(f'{now}昨日突破放量---： \n\n\n\n'+str(code))
+    send_email(f'{now}昨日回踩---： \n\n\n\n'+str(code))
 

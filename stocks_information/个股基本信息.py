@@ -103,7 +103,7 @@ def get_information(code):
     hxtc_dc(code)
 
 if __name__  ==  '__main__' :
-    get_information('300661')
+    get_information('柯力传感')
 
 
 

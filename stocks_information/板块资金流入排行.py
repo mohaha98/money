@@ -29,7 +29,6 @@ def dc(trade_date):
         # 'net_amount_rate':'净流入净占比',
         'buy_sm_amount_stock':'净流入最大股'
     })
-
     df['净流入(亿)'] = df['净流入']/1e8
     df = df.sort_values(by='净流入', ascending=False)
     # print(df.head(15))

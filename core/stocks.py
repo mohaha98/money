@@ -41,7 +41,7 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 120, SZ_max=1800, HSL_min=1, HSL_max=18, LB_min=0, LB_max=50, close_min=10,close_max=78):
+def filter_stocks(SZ_min = 130, SZ_max=1800, HSL_min=0.9, HSL_max=18, LB_min=0, LB_max=50, close_min=10,close_max=88):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
@@ -214,7 +214,6 @@ if __name__ == '__main__':
     # df = get_kline("002466",'tu')
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
-      # 茅台示例
     is_up_yj('300661')
 
 
