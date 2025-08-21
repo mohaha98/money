@@ -56,7 +56,8 @@ def is_strong_pullback(df):
     #     print('满足价格在均线附近')
 
     # -------- 条件4：缩量（当天成交量小于十日平均成交量） --------
-    if today['成交量'] >= today['avg_volume_5']*0.9 or today['成交量'] > df.iloc[-2]['成交量']:
+    if today['成交量'] >= today['avg_volume_5']*0.95 or today['成交量'] > df.iloc[-2]['成交量']:
+        # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
         return False
     # else:
@@ -70,9 +71,13 @@ def is_strong_pullback(df):
     # else:
     #     print('满足小实体')
 
+    # -------- 条件6：整体波动不大于4% --------
+    if (today['最高价'] - today['最低价']) / today['收盘价'] >= 0.04:
+        return False
 
-    # -------- 条件6：换手率小于3.6  并且小于五日平均换手率*0.8 --------
-    if today['换手率'] >= today['hs_5']*0.8:
+
+    # -------- 条件7：换手率小于3.6  并且小于五日平均换手率*0.8 --------
+    if today['换手率'] >= today['hs_5']:
         # print('不满足换手率下降',today['hs_5']*0.8)
         return False
     # else:

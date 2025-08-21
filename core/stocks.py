@@ -211,9 +211,9 @@ if __name__ == '__main__':
     # codes=filter_stocks()
     # print(codes)
     # print(len(codes))
-    # df = get_kline("002466",'tu')
+    df = get_kline("002466",'tu')
     # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
-    is_up_yj('300661')
+    # is_up_yj('300661')
 
 

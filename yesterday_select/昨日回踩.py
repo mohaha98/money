@@ -14,6 +14,7 @@ def is_strong_pullback_01(df):
     today_row = df.iloc[-1]
     # 去掉当天日期的k线数据
     df = df.iloc[:-1].copy()
+    # print(df)
     if not is_strong_pullback(df):
         return False
 
@@ -23,7 +24,7 @@ def select_stocks():
     """主函数：筛选符合条件的股票"""
 
     stock_list = filter_stocks()
-    # stock_list=['600557']
+    # stock_list=['600703']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code,'ak')
