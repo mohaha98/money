@@ -72,12 +72,11 @@ def get_introduction(code):
 def get_forecast(code):
     print('---------------------业绩情况--------------------')
     code=get_stock_code_by_name(code)
-    df = ak.stock_financial_abstract_ths(symbol=code[:-3]).sort_values(by='报告期', ascending=False).iloc[0][
-        '净利润同比增长率']
+    df = ak.stock_financial_abstract_ths(symbol=code[:-3]).sort_values(by='报告期', ascending=False).iloc[0]
     #预披露日期
     pre_date = pro.disclosure_date(ts_code=code).sort_values(by='pre_date', ascending=False).iloc[0]['pre_date']
     print(f'预披露日期：{pre_date}')
-    print(f"上一个业绩：{float(df.replace('%', ''))}%")
+    print(f"{df['报告期']}业绩：{float(df['净利润同比增长率'].replace('%', ''))}%")
     df1 = pro.fina_mainbz(ts_code=code, type='P',fields='end_date,bz_item,bz_cost').iloc[:12]
     # 2. 筛选出所有 end_date 与第一条相同的记录
     filtered_df = df1[df1['end_date'] == df1.iloc[0]['end_date']]

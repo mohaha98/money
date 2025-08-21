@@ -19,7 +19,7 @@ from datetime import datetime
 def dc(trade_date):
     print('---------------------东方财富板块资金流入--------------------')
     pro = ts.pro_api()
-    df = pro.moneyflow_ind_dc(trade_date=trade_date, fields='trade_date,name,pct_change, net_amount,buy_sm_amount_stock')
+    df = pro.moneyflow_ind_dc(trade_date=trade_date)
     # 重命名表头
     df = df.rename(columns={
         'name': '板块',
@@ -29,6 +29,7 @@ def dc(trade_date):
         # 'net_amount_rate':'净流入净占比',
         'buy_sm_amount_stock':'净流入最大股'
     })
+
     df['净流入(亿)'] = df['净流入']/1e8
     df = df.sort_values(by='净流入', ascending=False)
     # print(df.head(15))
@@ -120,17 +121,12 @@ if __name__  ==  '__main__':
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     now = datetime.today().strftime('%Y%m%d')
     date='20250820'
-    # dc(date)
-    # ths1(date)
-    # ths(date)
-    # gg_moneyflow_dc(date)
+    dc(date)
+    ths1(date)
+    ths(date)
+    gg_moneyflow_dc(date)
 
-    pro = ts.pro_api()
 
-    # 获取单日全部股票数据
-    df = pro.moneyflow_ths(trade_date='20250820')
-
-    print(df)
 
 
 
