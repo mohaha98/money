@@ -120,10 +120,17 @@ if __name__  ==  '__main__':
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     now = datetime.today().strftime('%Y%m%d')
     date='20250820'
-    dc(date)
-    ths1(date)
-    ths(date)
-    gg_moneyflow_dc(date)
+    # dc(date)
+    # ths1(date)
+    # ths(date)
+    # gg_moneyflow_dc(date)
+
+    pro = ts.pro_api()
+
+    # 获取单日全部股票数据
+    df = pro.moneyflow_ths(trade_date='20250820')
+
+    print(df)
 
 
 
