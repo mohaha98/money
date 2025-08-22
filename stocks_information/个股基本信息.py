@@ -101,10 +101,15 @@ def money_go(code):
     code = get_stock_code_by_name(code)
     # 获取单个股票数据
     today = datetime.today().strftime('%Y%m%d')
-    df = pro.moneyflow_dc(ts_code=code).iloc[0]
-    # df2 = pro.moneyflow_dc(ts_code=code, trade_date=today).iloc[0]
-    # print(df)
-    print(f"{df['trade_date']}净流入 {df['net_amount']}万")
+    df = pro.moneyflow_dc(ts_code=code)[::-1] ##颠倒过来 最新的在最下面
+    df['avg5'] = df['net_amount'].rolling(5).mean()
+    df['avg10'] = df['net_amount'].rolling(10).mean()
+    df = df.iloc[-1]
+    print(f"{df['trade_date']}净流入 {df['net_amount']}万  五日平均：{round(df['avg5'],1)}万   十日平均：{round(df['avg10'],1)}万")
+    print(f"【超大单】净流入占比 {df['buy_elg_amount_rate']}%  流入金额{df['buy_elg_amount']}万")
+    print(f"【大单】净流入占比 {df['buy_lg_amount_rate']}%   流入金额{df['buy_lg_amount']}万")
+    print(f"【中单】净流入占比 {df['buy_md_amount_rate']}%   流入金额{df['buy_md_amount']}万")
+    print(f"【小单】净流入占比 {df['buy_sm_amount_rate']}%   流入金额{df['buy_sm_amount']}万")
 
 
 def jszb(code):
@@ -145,7 +150,7 @@ def get_information(code):
 if __name__  ==  '__main__' :
     # pd.set_option('display.max_colwidth', 20)
     # pd.set_option('display.float_format', '{:.2f}'.format)
-    get_information('天齐锂业')
+    get_information('柯力传感')
 
 
 
