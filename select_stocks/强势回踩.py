@@ -35,7 +35,7 @@ def is_strong_pullback(df):
     #     print('满足多头')
     #     print(today['收盘价'],today['ma20'])
 
-    # -------- 条件2：过去12天中存在放量（放量日 > 当日10日均量 * 1.8） --------
+    # -------- 条件2：过去12天中存在放量（放量日 > 当日12日均量 * 1.8） --------
     last_15 = df.iloc[-12:-1].copy()
     last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
     if not last_15['vol_spike'].any():
@@ -55,7 +55,7 @@ def is_strong_pullback(df):
     # else:
     #     print('满足价格在均线附近')
 
-    # -------- 条件4：缩量（当天成交量小于十日平均成交量） --------
+    # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
     if today['成交量'] >= today['avg_volume_5']*0.95 or today['成交量'] > df.iloc[-2]['成交量']:
         # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
@@ -63,7 +63,7 @@ def is_strong_pullback(df):
     # else:
     #     print('满足缩量')
 
-    # -------- 条件5：实体小于价格的1.8% --------
+    # -------- 条件5：当天k线实体小于价格的1.8% --------
     body = abs(today['收盘价'] - today['开盘价'])
     if body / today['收盘价'] > 0.018:
         # print('不满足小实体')
@@ -71,12 +71,12 @@ def is_strong_pullback(df):
     # else:
     #     print('满足小实体')
 
-    # -------- 条件6：整体波动不大于4% --------
+    # -------- 条件6：当天价格整体波动不大于4% --------
     if (today['最高价'] - today['最低价']) / today['收盘价'] >= 0.04:
         return False
 
 
-    # -------- 条件7：换手率小于五日平均换手率 --------
+    # -------- 条件7：当天换手率小于五日平均换手率 --------
     if today['换手率'] >= today['hs_5']:
         # print('不满足换手率下降',today['hs_5']*0.8)
         return False
@@ -95,8 +95,8 @@ def is_strong_pullback(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    # stock_list = filter_stocks(close_min=12,close_max=98)
-    stock_list=['601609']
+    stock_list = filter_stocks(close_min=12,close_max=98)
+    # stock_list=['601609']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)

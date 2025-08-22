@@ -20,4 +20,4 @@ def tc(date = now):
     print(df.to_string(index=False))
 
 if __name__ == '__main__':
-    tc('20250821')
+    tc('20250822')
