@@ -29,9 +29,8 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
         return False  # 数据不足
 
 
-    df = df.iloc[:-4].copy()
-
-    df = df.copy()
+    # df = df.iloc[:-1].copy()
+    # df = df.copy()
     df['ma5'] = df['收盘价'].rolling(5).mean()
     df['ma10'] = df['收盘价'].rolling(10).mean()
     df['ma20'] = df['收盘价'].rolling(20).mean()
@@ -42,46 +41,31 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
 
     today = df.iloc[-1]
 
-    # 条件1：趋势未坏（轻微回调或多头排列）
+    # 1、前期横盘震荡（高低差 < 8%）
+    before15 = df[-16:-1]
+    high_max = before15['最高价'].max()
+    low_min = before15['最低价'].min()
+    max_fluct = (high_max - low_min) / low_min
+    if max_fluct > 0.09:
+        return False
+
+    # 2、趋势未坏（轻微回调或多头排列）
     trend_ok = (
-            (today['收盘价'] > today['ma20'] * 0.97) or
-            (today['ma5'] > today['ma10'] > today['ma20'])
+            (today['收盘价'] > today['ma20'] * 0.95) and
+            (today['ma10'] > today['ma20'])
     )
     if not trend_ok:
         return False
 
-    # 条件2：缩量+十字星 or 下影线 or 换手不高
+    # 3、实体小，振幅小于5个点  缩量  无异常高换手
     entity = abs(today['收盘价'] - today['开盘价'])
     total_range = today['最高价'] - today['最低价']
-    lower_shadow = min(today['开盘价'], today['收盘价']) - today['最低价']
-    upper_shadow = today['最高价'] - max(today['开盘价'], today['收盘价'])
 
-    is_doji_like = (entity / today['收盘价'] < 0.006) and (total_range / today['收盘价'] < 0.05)
-    is_long_lower_shadow = lower_shadow > upper_shadow * 1.5 and lower_shadow > 0.01 * today['收盘价']
-    is_volume_low = today['成交量'] < today['avg_vol_5']
-    is_turnover_normal = today['换手率'] < today['avg_turnover_5'] * 1.2  # 无异常高换手
+    is_doji_like = (entity / today['收盘价'] < 0.018) and (total_range / today['收盘价'] < 0.05) #实体小，振幅小于5个点
+    is_volume_low = (today['成交量'] < today['avg_vol_5']) and (today['成交量'] < before15['成交量'].iloc[-2])  ##缩量
+    is_turnover_normal = (today['换手率'] < today['avg_turnover_5'] * 1.1) and (today['换手率'] < before15['换手率'].iloc[-2])  # 无异常高换手
 
-    if not ((is_doji_like or is_long_lower_shadow) and is_volume_low and is_turnover_normal):
-        return False
-
-    # 条件3：前15日是否出现放量且换手率高（主力进出行为）
-    last_15 = df.iloc[-16:-1]
-    has_spike = (
-            (last_15['成交量'] > last_15['avg_vol_10'] * 1.8) &
-            (last_15['换手率'] > last_15['avg_turnover_5'] * 1.3)
-    ).any()
-
-    if not has_spike:
-        return False
-
-
-    # 条件4（新增）：后市可能大涨的信号：
-    # 1）缩量回调不破MA20
-    # 2）换手率持续收缩（筹码集中）
-    recent_5 = df.iloc[-5:]
-    stable_above_ma20 = (recent_5['收盘价'] > recent_5['ma20']).all()
-    shrinking_turnover = (recent_5['换手率'].iloc[-1] < recent_5['换手率'].mean()) and (recent_5['换手率'].iloc[-1] < recent_5['avg_turnover_10'].iloc[-1])
-    if not (stable_above_ma20 and shrinking_turnover):
+    if not (is_doji_like and is_volume_low and is_turnover_normal):
         return False
 
     return True
@@ -89,7 +73,7 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=15,SZ_min=120,HSL_min=0.5,close_max=60)
+    stock_list = filter_stocks(close_min=12, SZ_min=130, close_max=89)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
@@ -102,8 +86,6 @@ def select_stocks():
 
 if __name__ == '__main__':
     # 执行选股
-    # selected = select_stocks()
-    # print("符合突破放量模型的股票：", selected)
     code=select_stocks()
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')

@@ -1,8 +1,9 @@
+import pandas as pd
 import tushare as ts
 from datetime import datetime, timedelta
 from tools.logger import log
 from tools.send_request import send_request
-from core.stocks import is_up_yj
+from core.stocks import is_up_yj, get_kline
 import akshare as ak
 pro = ts.pro_api()
 
@@ -47,9 +48,12 @@ def hxtc_dc(code):
 
 
 
-#或者
+#
 #pro = ts.pro_api('your token')
 def get_introduction(code):
+    """
+    基本信息
+    """
     code=get_stock_code_by_name(code)
     df = pro.stock_company(ts_code=code, fields='ts_code,introduction,main_business,business_scope,province,com_name')
     # print(df)
@@ -70,6 +74,10 @@ def get_introduction(code):
     print(f'经营范围：{business_scope}')
 
 def get_forecast(code):
+    """
+    业绩情况
+    """
+
     print('---------------------业绩情况--------------------')
     code=get_stock_code_by_name(code)
     df = ak.stock_financial_abstract_ths(symbol=code[:-3]).sort_values(by='报告期', ascending=False).iloc[0]
@@ -86,6 +94,9 @@ def get_forecast(code):
     # print(result_df[1])
 
 def money_go(code):
+    """
+    资金流入
+    """
     print('---------------------资金流入--------------------')
     code = get_stock_code_by_name(code)
     # 获取单个股票数据
@@ -96,14 +107,45 @@ def money_go(code):
     print(f"{df['trade_date']}净流入 {df['net_amount']}万")
 
 
+def jszb(code):
+    """
+    技术指标
+    """
+
+    print('---------------------技术指标--------------------')
+    code = get_stock_code_by_name(code)[:-3]
+    df = get_kline(code)
+    if len(df) < 30:
+        raise "kline长度不够"
+    df['ma5'] = df['收盘价'].rolling(5).mean()
+    df['ma10'] = df['收盘价'].rolling(10).mean()
+    df['ma20'] = df['收盘价'].rolling(20).mean()
+    df['vol5'] = df['成交量'].rolling(5).mean()
+    df['vol10'] = df['成交量'].rolling(10).mean()
+    df['hs_5'] = df['换手率'].rolling(5).mean()
+    df['hs_10'] = df['换手率'].rolling(10).mean()
+    today = df.iloc[-1]
+    print(f"{today['日期']}   涨幅:{today['涨跌幅']}%")
+    print(f"收盘价   成交量(万手)   换手率   ma5   ma10   ma20   vol5(万手)   vol10(万手)   hs_5   hs_10")
+    print(f"{today['收盘价']}     {round(today['成交量']/10000,1)}        {today['换手率']}  {round(today['ma5'],2)}  {round(today['ma10'],2)}  {round(today['ma20'],2)}    {round(today['vol5']/10000,1)}        {round(today['vol10']/10000,1)}        {round(today['hs_5'],2)}   {round(today['hs_10'],2)}")
+
+
+
+
+
+
 def get_information(code):
     get_introduction(code)
+    jszb(code)
     get_forecast(code)
     money_go(code)
     hxtc_dc(code)
 
+
 if __name__  ==  '__main__' :
-    get_information('柯力传感')
+    # pd.set_option('display.max_colwidth', 20)
+    # pd.set_option('display.float_format', '{:.2f}'.format)
+    get_information('天齐锂业')
 
 
 

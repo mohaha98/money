@@ -15,10 +15,10 @@ def is_platform_breakout(df):
     - 今日突破平台上沿
     - 今日放量明显
     """
-    if len(df) < 21:
+    if len(df) < 30:
         return False
 
-    recent = df[-10:]
+    recent = df[-15:]
     today = recent.iloc[-1]
     before = recent.iloc[:-1]
 
@@ -27,7 +27,7 @@ def is_platform_breakout(df):
     max_fluct = (high_max - low_min) / low_min
 
     # 横盘震荡（高低差 < 8%）
-    if max_fluct > 0.12:
+    if max_fluct > 0.09:
         return False
 
     # 今日收盘 > 平台最高（突破）
@@ -35,8 +35,8 @@ def is_platform_breakout(df):
         return False
 
     # 放量突破：今日成交量 > 前5日均量 * 1.5
-    avg_vol_5 = before['成交量'][-5:].mean()
-    if today['成交量'] <= 1.5 * avg_vol_5:
+    avg_vol_5 = before['成交量'][-6:-1].mean()
+    if today['成交量'] <= 1.8 * avg_vol_5:
         return False
 
     return True
@@ -47,7 +47,7 @@ def is_platform_breakout(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(LB_min=2,HSL_min=3,close_min=13)
+    stock_list = filter_stocks(LB_min=1.8,HSL_min=2.8,close_min=13)
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):

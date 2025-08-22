@@ -76,7 +76,7 @@ def is_strong_pullback(df):
         return False
 
 
-    # -------- 条件7：换手率小于3.6  并且小于五日平均换手率*0.8 --------
+    # -------- 条件7：换手率小于五日平均换手率 --------
     if today['换手率'] >= today['hs_5']:
         # print('不满足换手率下降',today['hs_5']*0.8)
         return False
@@ -95,8 +95,8 @@ def is_strong_pullback(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['601609']
+    # stock_list = filter_stocks(close_min=12,close_max=98)
+    stock_list=['601609']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -107,9 +107,10 @@ def select_stocks():
     return result
 
 if __name__  ==  '__main__':
+    #大盘下跌跑来选股
     # 执行选股
     code=select_stocks()
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
