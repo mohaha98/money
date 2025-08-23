@@ -34,7 +34,7 @@ def is_strong_pullback(df):
 
     # -------- 条件2：过去12天中存在放量（放量日 > 当日12日均量 * 1.8） --------
     last_15 = df.iloc[-12:-1].copy()
-    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
+    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_5'] * 1.6
     if not last_15['vol_spike'].any():
         # print('不满足前期放量')
         return False
@@ -53,7 +53,7 @@ def is_strong_pullback(df):
     #     print('满足价格在均线附近')
 
     # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
-    if today['成交量'] >= today['avg_volume_5']*0.95 or today['成交量'] > df.iloc[-2]['成交量']:
+    if today['成交量'] >= today['avg_volume_5']*1.1 or today['成交量'] > df.iloc[-2]['成交量']*1.1:
         # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
         return False
@@ -62,7 +62,7 @@ def is_strong_pullback(df):
 
     # -------- 条件5：当天k线实体小于价格的1.8% --------
     body = abs(today['收盘价'] - today['开盘价'])
-    if body / today['收盘价'] > 0.018:
+    if body / today['收盘价'] > 0.02:
         # print('不满足小实体')
         return False
     # else:

@@ -8,12 +8,25 @@ def is_breakout_volume(df):
     """判断是否符合突破放量选股模型"""
     if len(df) < 30:
         return False
+
+
+    df['ma5'] = df['收盘价'].rolling(5).mean()
+    df['ma10'] = df['收盘价'].rolling(10).mean()
+    df['ma20'] = df['收盘价'].rolling(20).mean()
+    today = df.iloc[-1]
+
     last_close = df.iloc[-1]['收盘价']
     last_vol = df.iloc[-1]['成交量']
     high_20 = df['收盘价'][-15:-1].max()  # 不包含今天
     # print(high_20)
     avg_volume_5 = df['成交量'][-6:-1].mean()  # 不含今天
-    if last_close > high_20 and last_vol > avg_volume_5 * 1.8:
+
+    # -------- 条件1：均线多头排列 --------
+    if not (today['ma5'] > today['ma10'] > today['ma20'] and today['收盘价'] > today['ma20']):
+        # print('不满足多头')
+        return False
+
+    if last_close > high_20 and last_vol > avg_volume_5 * 1.5:
         return True
     return False
 
