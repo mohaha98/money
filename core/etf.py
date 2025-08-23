@@ -14,7 +14,7 @@ def get_all_etf():
            (df["index_code"].str.contains("SZ|SH|CSI", na=False))
            ]
     # 去重：一个指数只保留一只ETF（默认保留第一只）
-    df = df.drop_duplicates(subset='index_code', keep='first')
+    # df = df.drop_duplicates(subset='index_code', keep='first')
     # print(df)
     result=df['ts_code'].tolist()
     # print(result)
