@@ -15,7 +15,7 @@ def is_strong_pullback(df):
     判断是否符合“强势回踩 + 缩量止跌”选股模型
     
     """
-    # df = df.iloc[:-1].copy()
+    # df = df.iloc[:-2].copy()
     # 价格、均线、涨幅
     df['ma5'] = df['收盘价'].rolling(5).mean()
     df['ma10'] = df['收盘价'].rolling(10).mean()
@@ -65,7 +65,7 @@ def is_strong_pullback(df):
 
     # -------- 条件5：当天k线实体小于价格的1.8% --------
     body = abs(today['收盘价'] - today['开盘价'])
-    if body / today['收盘价'] > 0.018:
+    if body / today['收盘价'] > 0.02:
         # print('不满足小实体')
         return False
     # else:
@@ -74,10 +74,13 @@ def is_strong_pullback(df):
     # -------- 条件6：当天价格整体波动不大于4% --------
     if (today['最高价'] - today['最低价']) / today['收盘价'] >= 0.04:
         return False
+    # else:
+    #     print("满足小波动")
 
 
     # -------- 条件7：当天换手率小于五日平均换手率 --------
-    if today['换手率'] >= today['hs_5']:
+    # print(today['hs_5'])
+    if today['换手率'] >= today['hs_5']*0.8:
         # print('不满足换手率下降',today['hs_5']*0.8)
         return False
     # else:
@@ -85,6 +88,8 @@ def is_strong_pullback(df):
 
     if abs(today['涨跌幅']) >= 5:
         return False
+    # else:
+    #     print('满足涨跌幅小于5%')
 
 
     return True
@@ -96,7 +101,7 @@ def select_stocks():
 
     """主函数：筛选符合条件的股票"""
     stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['601609']
+    # stock_list=['002987']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -113,4 +118,4 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))

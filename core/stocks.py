@@ -198,7 +198,7 @@ def is_up_yj(code):
     code=get_stock_code_by_name(code)[:-3]
     df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
     up = float(df.replace('%', ''))
-    if up >= 9.9:
+    if up >= -2:
         return True
     else:
         return False
