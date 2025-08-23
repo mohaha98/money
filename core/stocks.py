@@ -41,7 +41,7 @@ def get_all_codes(remove_st=True, return_df=False):
 
 
 #用于初步筛选
-def filter_stocks(SZ_min = 130, SZ_max=1800, HSL_min=0.9, HSL_max=18, LB_min=0, LB_max=50, close_min=10,close_max=88):
+def filter_stocks(SZ_min = 130, SZ_max = 2000, HSL_min = 0.9, HSL_max = 18, LB_min = 0, LB_max = 50, close_min=10, close_max=88):
 
     # 获取股票实时行情数据（包含市值、换手率、量比等）
     df = ak.stock_zh_a_spot_em()
@@ -105,6 +105,7 @@ def get_kline_tushare(code):
     pro = ts.pro_api()
     df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date = today)
     # print(df)
+    ##倒序
     df = df[::-1]
     # print(df.iloc[-1])
     df = df.rename(columns={
@@ -207,13 +208,8 @@ if __name__ == '__main__':
     # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     print(get_kline('600580','ea'))
-
-    # print(get_kline_tushare('002466'))
     # codes=filter_stocks()
-    # print(codes)
     # print(len(codes))
-    # df = get_kline("002466",'tu')
-    # print(df)
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # is_up_yj('300661')
 

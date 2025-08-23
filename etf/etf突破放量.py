@@ -1,11 +1,9 @@
-
+import time
 from datetime import datetime
 from tools.logger import log
-from core.stocks import get_kline
-from core.stocks import filter_stocks,is_up_yj
+from core.etf import get_all_etf,etf_kline
 from tqdm import tqdm
 from tools.send_email import send_email
-
 def is_breakout_volume(df):
     """判断是否符合突破放量选股模型"""
     if len(df) < 30:
@@ -21,15 +19,16 @@ def is_breakout_volume(df):
 
 def select_stocks():
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(LB_min=1.6, HSL_min=2.8, close_min=12)
-    # stock_list=['300468']
+    stock_list = get_all_etf()
+    # stock_list=['159792.SZ']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
-        df = get_kline(code,'ak')
+        try:
+            df = etf_kline(code)
+        except Exception as e:
+            continue
         if df is not None and is_breakout_volume(df):
-            ##业绩涨的
-            if is_up_yj(code):
-                result.append(code)
+            result.append(code[:-3])
     return result
 
 if __name__  ==  '__main__':
@@ -40,5 +39,4 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}突破放量---： \n\n\n\n'+str(code))
-
+    send_email(f'{now}etf_突破放量_筛选： \n\n\n\n'+str(code))
