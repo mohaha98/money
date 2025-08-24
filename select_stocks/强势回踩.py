@@ -36,7 +36,7 @@ def is_strong_pullback(df):
     #     print(today['收盘价'],today['ma20'])
 
     # -------- 条件2：过去12天中存在放量（放量日 > 当日12日均量 * 1.8） --------
-    last_15 = df.iloc[-12:-1].copy()
+    last_15 = df.iloc[-13:-1].copy()
     last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
     if not last_15['vol_spike'].any():
         # print('不满足前期放量')
@@ -100,8 +100,8 @@ def is_strong_pullback(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['002987']
+    # stock_list = filter_stocks(close_min=12,close_max=98)
+    stock_list=['603667']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -118,4 +118,4 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))

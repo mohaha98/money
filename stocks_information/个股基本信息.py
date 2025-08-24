@@ -130,10 +130,14 @@ def jszb(code):
     df['hs_5'] = df['换手率'].rolling(5).mean()
     df['hs_10'] = df['换手率'].rolling(10).mean()
     today = df.iloc[-1]
-    print(f"{today['日期']}   涨幅:{today['涨跌幅']}%")
-    print(f"收盘价   成交量(万手)   换手率   ma5   ma10   ma20   vol5(万手)   vol10(万手)   hs_5   hs_10")
-    print(f"{today['收盘价']}     {round(today['成交量']/10000,1)}        {today['换手率']}  {round(today['ma5'],2)}  {round(today['ma10'],2)}  {round(today['ma20'],2)}    {round(today['vol5']/10000,1)}        {round(today['vol10']/10000,1)}        {round(today['hs_5'],2)}   {round(today['hs_10'],2)}")
 
+    last_15 = df.iloc[-13:-1].copy()
+    last_15['vol_spike'] = last_15['成交量'] > last_15['vol10'] * 1.8
+    print(f"{today['日期']} ({today['涨跌幅']}%)")
+    print("         今日     5日    10日    20日 ")
+    print(f"价格:    {today['收盘价']}   {round(today['ma5'],2)}  {round(today['ma10'],2)}   {round(today['ma20'],2)}")
+    print(f"成交量:   {round(today['成交量']/10000,1)}    {round(today['vol5']/10000,1)}   {round(today['vol10']/10000,1)}     {'(12日内有放巨量!)' if last_15['vol_spike'].any() else ''}")
+    print(f"换手率:   {today['换手率']}     {round(today['hs_5'],2)}   {round(today['hs_10'],2)}")
 
 
 
@@ -143,14 +147,14 @@ def get_information(code):
     get_introduction(code)
     jszb(code)
     get_forecast(code)
-    money_go(code)
+    # money_go(code)
     hxtc_dc(code)
 
 
 if __name__  ==  '__main__' :
     # pd.set_option('display.max_colwidth', 20)
     # pd.set_option('display.float_format', '{:.2f}'.format)
-    get_information('长信科技')
+    get_information('001696')
 
 
 
