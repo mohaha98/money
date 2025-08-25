@@ -56,7 +56,7 @@ def is_strong_pullback(df):
     #     print('满足价格在均线附近')
 
     # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
-    if today['成交量'] >= today['avg_volume_5']*0.95 or today['成交量'] > df.iloc[-2]['成交量']:
+    if today['成交量'] >= today['avg_volume_5']*0.95 or today['成交量'] > df.iloc[-2]['成交量']*1.5:
         # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
         return False
@@ -72,19 +72,19 @@ def is_strong_pullback(df):
     #     print('满足小实体')
 
     # -------- 条件6：当天价格整体波动不大于4% --------
-    if (today['最高价'] - today['最低价']) / today['收盘价'] >= 0.04:
+    if (today['最高价'] - today['最低价']) / today['收盘价'] >= 0.05:
         return False
     # else:
     #     print("满足小波动")
 
 
     # -------- 条件7：当天换手率小于五日平均换手率 --------
-    # print(today['hs_5'])
-    if today['换手率'] >= today['hs_5']*0.8:
-        # print('不满足换手率下降',today['hs_5']*0.8)
+
+    if today['换手率'] >= today['hs_5']:
+        # print('不满足换手率下降',today['hs_5'])
         return False
     # else:
-    #     print('满足换手率下降',today['hs_5']*0.8)
+    #     print('满足换手率下降',today['hs_5'])
 
     if abs(today['涨跌幅']) >= 5:
         return False
@@ -101,7 +101,7 @@ def select_stocks():
 
     """主函数：筛选符合条件的股票"""
     stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['300346']
+    # stock_list=['002915']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -118,4 +118,4 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
