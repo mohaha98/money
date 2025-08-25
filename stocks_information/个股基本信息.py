@@ -68,7 +68,7 @@ def get_introduction(code):
     ).sort_values(by='total_mv', ascending=False).sort_values(by='trade_date', ascending=False).iloc[0]
 
     print('---------------------基本信息--------------------')
-    print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}  市值{int(sz['total_mv']/ 10000)}亿   当前价格：{sz['close']}" )
+    print(f"{df['com_name'][0]}--{df['province'][0]}  {df['ts_code'][0]}  市值{int(sz['total_mv']/ 10000)}亿" )
     # print(f'公司介绍：{introduction}')
     print(f'业务产品：{main_business}')
     print(f'经营范围：{business_scope}')
@@ -133,7 +133,7 @@ def jszb(code):
 
     last_15 = df.iloc[-13:-1].copy()
     last_15['vol_spike'] = last_15['成交量'] > last_15['vol10'] * 1.8
-    print(f"{today['日期']} ({today['涨跌幅']}%)")
+    print(f"{today['日期']} (今日涨幅：{today['涨跌幅']}%)")
     print("         今日     5日    10日    20日 ")
     print(f"价格:    {today['收盘价']}   {round(today['ma5'],2)}  {round(today['ma10'],2)}   {round(today['ma20'],2)}")
     print(f"成交量:   {round(today['成交量']/10000,1)}    {round(today['vol5']/10000,1)}   {round(today['vol10']/10000,1)}     {'(12日内有放巨量!)' if last_15['vol_spike'].any() else ''}")
@@ -154,7 +154,7 @@ def get_information(code):
 if __name__  ==  '__main__' :
     # pd.set_option('display.max_colwidth', 20)
     # pd.set_option('display.float_format', '{:.2f}'.format)
-    get_information('001696')
+    get_information('600522')
 
 
 
