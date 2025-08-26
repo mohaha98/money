@@ -196,7 +196,8 @@ def get_stock_code_by_name(code):
 
 def is_up_yj(code):
     code=get_stock_code_by_name(code)[:-3]
-    df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['净利润同比增长率']
+    df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['扣非净利润同比增长率']
+    # print(df)
     up = float(df.replace('%', ''))
     if up >= 0:
         return True
@@ -207,10 +208,10 @@ if __name__ == '__main__':
     pass
     # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-    print(get_kline('600580','ea'))
+    # print(get_kline('600580','ak'))
     # codes=filter_stocks()
     # print(len(codes))
     # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
-    # is_up_yj('300661')
+    is_up_yj('600580')
 
 

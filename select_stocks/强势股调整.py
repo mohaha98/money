@@ -45,18 +45,18 @@ def is_strong_pullback(df):
     # else:
     #     print('满足前期放量')
     # --- 1. 前期有明显上涨 ---
-    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.15:  # 涨幅至少15%
+    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.10:  # 涨幅至少10%
         return False
 
 
-    # -------- 条件3：价格在 五日线或者十日线2个点距离内 --------
-    if not (
-        abs(yesterday['收盘价'] - yesterday['ma5']) / yesterday['ma5'] < 0.046 or
-        abs(yesterday['收盘价'] - yesterday['ma10']) / yesterday['ma10'] < 0.046
-    ):
-        # print('不满足价格在均线附近',abs(today['收盘价'] - today['ma10']) / today['ma10'])
-        return False
-    # else:
+    # # -------- 条件3：价格在 五日线或者十日线2个点距离内 --------
+    # if not (
+    #     abs(yesterday['收盘价'] - yesterday['ma5']) / yesterday['ma5'] < 0.046 or
+    #     abs(yesterday['收盘价'] - yesterday['ma10']) / yesterday['ma10'] < 0.046
+    # ):
+    #     # print('不满足价格在均线附近',abs(today['收盘价'] - today['ma10']) / today['ma10'])
+    #     return False
+    # # else:
     #     print('满足价格在均线附近')
 
     # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
@@ -91,6 +91,7 @@ def is_strong_pullback(df):
     #     print('满足换手率下降',today['hs_5'])
 
     if abs(yesterday['涨跌幅']) >= 3 or today['涨跌幅'] < -0.5 or today['涨跌幅'] > 6:
+        # print(f"{today['涨跌幅']}")
         return False
     # else:
     #     print('满足涨跌幅小于5%')
@@ -108,7 +109,7 @@ def select_stocks():
 
     """主函数：筛选符合条件的股票"""
     stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['603667']
+    # stock_list=['601609']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -119,7 +120,7 @@ def select_stocks():
     return result
 
 if __name__  ==  '__main__':
-    #大盘下跌跑来选股
+    #
     # 执行选股
     code=select_stocks()
     now = datetime.today().strftime('%Y%m%d%H%M')
