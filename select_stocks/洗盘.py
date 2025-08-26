@@ -51,7 +51,7 @@ def is_possible_washout_with_turnover(df: pd.DataFrame) -> bool:
 
     # 2、趋势未坏（轻微回调或多头排列）
     trend_ok = (
-            (today['收盘价'] > today['ma20'] * 0.95) and
+            (today['收盘价'] > today['ma20'] * 1.1) and
             (today['ma10'] > today['ma20'])
     )
     if not trend_ok:

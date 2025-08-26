@@ -15,7 +15,7 @@ def is_strong_pullback(df):
     判断是否符合“强势回踩 + 缩量止跌”选股模型
     
     """
-    # df = df.iloc[:-1].copy()
+    # df = df.iloc[:-2].copy()
     # 价格、均线、涨幅
     df['ma5'] = df['收盘价'].rolling(5).mean()
     df['ma10'] = df['收盘价'].rolling(10).mean()
@@ -50,7 +50,7 @@ def is_strong_pullback(df):
         abs(today['收盘价'] - today['ma5']) / today['ma5'] < 0.03 or
         abs(today['收盘价'] - today['ma10']) / today['ma10'] < 0.03
     ):
-        # print('不满足价格在均线附近')
+        # print('不满足价格在均线附近',abs(today['收盘价'] - today['ma10']) / today['ma10'])
         return False
     # else:
     #     print('满足价格在均线附近')
@@ -101,7 +101,7 @@ def select_stocks():
 
     """主函数：筛选符合条件的股票"""
     stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['002915']
+    # stock_list=['603667']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
@@ -118,4 +118,4 @@ if __name__  ==  '__main__':
     now = datetime.today().strftime('%Y%m%d%H%M')
     log.info(f'长度是{len(code)}')
     log.info(f'{code}')
-    # send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
+    send_email(f'{now}强势回踩---： \n\n\n\n'+str(code))
