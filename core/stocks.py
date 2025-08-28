@@ -207,12 +207,10 @@ def is_up_yj(code):
 if __name__ == '__main__':
     pass
     # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
-    ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-
+    # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
     print(get_kline('600580','ak'))
     # codes=filter_stocks()
     # print(len(codes))
-    # ts.set_token('2ab066e2a7f5502cbae653839b89eda20c7e538f1c01a6382e34a8b2')
     # is_up_yj('600580')
 
 
