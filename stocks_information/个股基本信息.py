@@ -155,7 +155,7 @@ def get_information(code):
 if __name__  ==  '__main__' :
     # pd.set_option('display.max_colwidth', 20)
     # pd.set_option('display.float_format', '{:.2f}'.format)
-    get_information('603025')
+    get_information('300007')
 
 
 
