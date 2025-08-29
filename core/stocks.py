@@ -208,9 +208,15 @@ if __name__ == '__main__':
     pass
     # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-    print(get_kline('600580','ak'))
+    # print(get_kline('600580','ak'))
     # codes=filter_stocks()
     # print(len(codes))
     # is_up_yj('600580')
+    pro = ts.pro_api()
+
+    # 获取单日全部明细
+    df = pro.hm_detail(trade_date='20250827',fields='trade_date,hm_name,ts_code,ts_name,buy_amount,sell_amount,net_amount')
+    print(df)
+
 
 
