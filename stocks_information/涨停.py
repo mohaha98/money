@@ -45,7 +45,7 @@ def get_limit_up_stocks(date=None):
 if __name__ == '__main__':
     pd.set_option('display.float_format', '{:.2f}'.format)
     # 示例：获取今天涨停股票
-    limit_up_list = get_limit_up_stocks('20250828')
+    limit_up_list = get_limit_up_stocks('20250829')
     print(limit_up_list.to_string(index=False))
 
 

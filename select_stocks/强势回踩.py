@@ -22,8 +22,8 @@ def is_strong_pullback(df):
     df['ma20'] = df['收盘价'].rolling(20).mean()
     df['avg_volume_5'] = df['成交量'].rolling(5).mean()
     df['avg_volume_10'] = df['成交量'].rolling(10).mean()
-    df['hs_5'] = df['换手率'].rolling(5).mean()
-    df['hs_10'] = df['换手率'].rolling(10).mean()
+    # df['hs_5'] = df['换手率'].rolling(5).mean()
+    # df['hs_10'] = df['换手率'].rolling(10).mean()
 
     today = df.iloc[-1]
 
@@ -80,9 +80,9 @@ def is_strong_pullback(df):
 
     # -------- 条件7：当天换手率小于五日平均换手率 --------
 
-    if today['换手率'] >= today['hs_5']:
-        # print('不满足换手率下降',today['hs_5'])
-        return False
+    # if today['换手率'] >= today['hs_5']:
+    #     # print('不满足换手率下降',today['hs_5'])
+    #     return False
     # else:
     #     print('满足换手率下降',today['hs_5'])
 
@@ -104,7 +104,7 @@ def select_stocks():
     # stock_list=['600580']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
-        df = get_kline(code)
+        df = get_kline(code,'tu')
         if df is not None and is_strong_pullback(df):
             ##业绩涨的
             if is_up_yj(code):

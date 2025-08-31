@@ -146,7 +146,7 @@ def jszb(code):
 
 def get_information(code):
     get_introduction(code)
-    jszb(code)
+    # jszb(code)
     get_forecast(code)
     # money_go(code)
     hxtc_dc(code)

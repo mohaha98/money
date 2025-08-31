@@ -23,8 +23,8 @@ def is_strong_pullback(df):
     df['ma20'] = df['收盘价'].rolling(20).mean()
     df['avg_volume_5'] = df['成交量'].rolling(5).mean()
     df['avg_volume_10'] = df['成交量'].rolling(10).mean()
-    df['hs_5'] = df['换手率'].rolling(5).mean()
-    df['hs_10'] = df['换手率'].rolling(10).mean()
+    # df['hs_5'] = df['换手率'].rolling(5).mean()
+    # df['hs_10'] = df['换手率'].rolling(10).mean()
 
     today = df.iloc[-1]
 
@@ -39,7 +39,7 @@ def is_strong_pullback(df):
 
     # -------- 条件2：过去12天中存在放量（放量日 > 当日12日均量 * 1.8） --------
     last_15 = df.iloc[-5:-1].copy()
-    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.10:  # 涨幅至少10%
+    if (last_15['最高价'].max() - last_15['最低价'].min()) / last_15['收盘价'].min() < 0.12:  # 涨幅至少10%
         return False
     # last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.7
     # if not last_15['vol_spike'].any():
@@ -62,12 +62,12 @@ def is_strong_pullback(df):
     # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
     if today['成交量'] > df.iloc[-2]['成交量'] or today['成交量'] > today['avg_volume_5']:
         # print(today['成交量'],today['avg_volume_5'])
-        print('不满足缩量')
+        # print('不满足缩量')
         return False
     # else:
     #     print('满足缩量')
 
-    if df.iloc[-2]['涨跌幅'] < 2.8:
+    if df.iloc[-2]['涨跌幅'] < 2.3:
         # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
         return False
@@ -89,9 +89,9 @@ def is_strong_pullback(df):
 
     # -------- 条件7：当天换手率小于五日平均换手率 --------
 
-    if today['换手率'] >= df.iloc[-2]['换手率']*0.8:
-        # print('不满足换手率下降',today['hs_5'])
-        return False
+    # if today['换手率'] >= df.iloc[-2]['换手率']*0.8:
+    #     # print('不满足换手率下降',today['hs_5'])
+    #     return False
     # else:
     #     print('满足换手率下降',today['hs_5'])
 
@@ -114,7 +114,7 @@ def select_stocks():
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         # time.sleep(1.3)
-        df = get_kline(code)
+        df = get_kline(code,'tu')
         if df is not None and is_strong_pullback(df):
             ##业绩涨的
             if is_up_yj(code):
