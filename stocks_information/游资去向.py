@@ -28,11 +28,11 @@ def main(date):
         "net_amount": "净买卖（元）"
     }, inplace=True)
     # print(df)
-    filepath = os.path.join(config.DATA_DIR, f'游资{date}.xlsx')
+    filepath = os.path.join(config.DATA_DIR, f'游资去向{date}.xlsx')
     df.to_excel(filepath, index=False)
 
 
 if __name__ == '__main__':
-    date='20250828'
+    date='20251029'
     main(date)
     # print(DATA_DIR)

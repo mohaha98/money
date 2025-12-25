@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 from core.stocks import get_kline
@@ -22,8 +23,8 @@ def is_strong_pullback(df):
     df['ma20'] = df['收盘价'].rolling(20).mean()
     df['avg_volume_5'] = df['成交量'].rolling(5).mean()
     df['avg_volume_10'] = df['成交量'].rolling(10).mean()
-    df['hs_5'] = df['换手率'].rolling(5).mean()
-    df['hs_10'] = df['换手率'].rolling(10).mean()
+    # df['hs_5'] = df['换手率'].rolling(5).mean()
+    # df['hs_10'] = df['换手率'].rolling(10).mean()
 
     today = df.iloc[-1]
     yesterday = df.iloc[-2]
@@ -84,9 +85,9 @@ def is_strong_pullback(df):
 
     # -------- 条件7：当天换手率小于五日平均换手率 --------
 
-    if yesterday['换手率'] >= yesterday['hs_5']:
-        # print('不满足换手率下降',today['hs_5'])
-        return False
+    # if yesterday['换手率'] >= yesterday['hs_5']:
+    #     # print('不满足换手率下降',today['hs_5'])
+    #     return False
     # else:
     #     print('满足换手率下降',today['hs_5'])
 
@@ -97,8 +98,8 @@ def is_strong_pullback(df):
     #     print('满足涨跌幅小于5%')
 
 
-    if today['成交量'] > yesterday['成交量']*1.6 or today['换手率'] > yesterday['换手率']*2 or today['换手率'] < yesterday['换手率']:
-        return False
+    # if today['成交量'] > yesterday['成交量']*1.6 or today['换手率'] > yesterday['换手率']*2 or today['换手率'] < yesterday['换手率']:
+    #     return False
 
     return True
 
@@ -109,12 +110,17 @@ def select_stocks():
 
     """主函数：筛选符合条件的股票"""
     stock_list = filter_stocks(close_min=12,close_max=98)
-    # stock_list=['601609']
+    # stock_list=['600580']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
-        df = get_kline(code)
+        try:
+            df = get_kline(code,'ak')
+        except:
+            time.sleep(1.5)
+            df=get_kline(code,'tu')
         if df is not None and is_strong_pullback(df):
             ##业绩涨的
+
             if is_up_yj(code):
                 result.append(code)
     return result

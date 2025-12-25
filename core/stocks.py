@@ -83,7 +83,7 @@ def get_kline_east(code):
                    "secid": f"{1 if code.startswith('6') else 0}.{code}",
                    "klt": "101",
                    "fqt": 1}
-        haed={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        haed={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
               'referer':f'https://quote.eastmoney.com/{"sh" if code.startswith("6") else "sz"}{code}.html'}
         response = send_request("GET", url, data=payload,headers=haed)
         k_data=response.get('data').get('klines')
@@ -195,23 +195,27 @@ def get_stock_code_by_name(code):
 #判断业绩
 
 def is_up_yj(code):
-    code=get_stock_code_by_name(code)[:-3]
-    df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['扣非净利润同比增长率']
-    # print(df)
-    up = float(df.replace('%', ''))
-    if up >= 0:
-        return True
-    else:
+    try:
+        code=get_stock_code_by_name(code)[:-3]
+        df = ak.stock_financial_abstract_ths(symbol=code).sort_values(by='报告期', ascending=False).iloc[0]['扣非净利润同比增长率']
+        # print(df)
+        up = float(df.replace('%', ''))
+        if up >= 0:
+            return True
+        else:
+            return False
+    except:
         return False
 
 if __name__ == '__main__':
     pass
-    # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
+    ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-    print(get_kline('600580','ak'))
+    print(get_kline('600580','ea'))
     # codes=filter_stocks()
     # print(len(codes))
     # is_up_yj('600580')
+    # filter_stocks()
 
 
 
