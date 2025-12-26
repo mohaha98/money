@@ -29,6 +29,13 @@ def is_strong_pullback(df):
     today = df.iloc[-1]
     yesterday = df.iloc[-2]
 
+    # ====== ✨新增：最近5天内出现涨停 ======
+    last_5 = df.tail(5)
+    # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
+    limit_up = last_5['涨跌幅'] >= 9.8
+    if not limit_up.any():
+        return False  # 最近 5 天没有涨停则直接排除
+
     # -------- 条件1：均线多头排列 --------
     if not (today['ma5'] > today['ma10'] > today['ma20'] and today['收盘价'] > today['ma20']):
         # print('不满足多头')
@@ -46,10 +53,17 @@ def is_strong_pullback(df):
     # else:
     #     print('满足前期放量')
     # --- 1. 前期有明显上涨 ---
-    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.10:  # 涨幅至少10%
+    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.14:  # 涨幅至少10%
         return False
 
 
+    # 条件3：十字星（实体极小，总波动不大）
+    entity = abs(today['收盘价'] - today['开盘价'])
+    total_range = today['最高价'] - today['最低价']
+    if entity / today['收盘价'] > 0.008:  # 实体小于0.5%
+        return False
+    if total_range / today['收盘价'] > 0.04:  # 整体波动不大于4%
+        return False
     # # -------- 条件3：价格在 五日线或者十日线2个点距离内 --------
     # if not (
     #     abs(yesterday['收盘价'] - yesterday['ma5']) / yesterday['ma5'] < 0.046 or
@@ -61,7 +75,7 @@ def is_strong_pullback(df):
     #     print('满足价格在均线附近')
 
     # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
-    if yesterday['成交量'] >= yesterday['avg_volume_5']:
+    if today['成交量'] >= today['avg_volume_5']:
         # print(today['成交量'],today['avg_volume_5'])
         # print('不满足缩量')
         return False
