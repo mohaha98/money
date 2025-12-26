@@ -28,12 +28,8 @@ def is_trend_pullback_star(df):
     if not (row['ma5'] > row['ma10'] > row['ma20'] and row['收盘价'] > row['ma20']):
         return False
 
-    #五日成交线朝上
-    if df.iloc[-1]['avg_volume_5'] < df.iloc[-2]['avg_volume_5']:
-        return False
-
     # ====== ✨新增：最近5天内出现涨停 ======
-    last_5 = df.tail(5)
+    last_5 = df.tail(7)
     # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
     limit_up = last_5['涨跌幅'] >= 9.8
     if not limit_up.any():

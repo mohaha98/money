@@ -30,7 +30,7 @@ def is_strong_pullback(df):
     yesterday = df.iloc[-2]
 
     # ====== ✨新增：最近5天内出现涨停 ======
-    last_5 = df.tail(5)
+    last_5 = df.tail(6)
     # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
     limit_up = last_5['涨跌幅'] >= 9.8
     if not limit_up.any():
