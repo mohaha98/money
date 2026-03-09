@@ -5,7 +5,7 @@ from core.stocks import get_kline
 from core.stocks import filter_stocks
 from tqdm import tqdm
 from tools.send_email import send_email
-from select_stocks.突破放量 import is_breakout_volume
+from select_stocks.下影线 import is_breakout_volume
 
 def is_breakout_volume_01(df):
     """判断是否符合突破放量选股模型"""

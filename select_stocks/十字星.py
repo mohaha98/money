@@ -1,9 +1,10 @@
 from datetime import datetime
 from tools.logger import log
 from core.stocks import get_kline
-from core.stocks import filter_stocks,is_up_yj
+from core.stocks import filter_stocks,is_up_yj,get_all_codes
 from tqdm import tqdm
 from tools.send_email import send_email
+from select_stocks.下影线 import is_long_donw_line
 
 ##回踩缩量十字星
 def is_trend_pullback_star(df):
@@ -31,9 +32,9 @@ def is_trend_pullback_star(df):
     # ====== ✨新增：最近5天内出现涨停 ======
     last_5 = df.tail(7)
     # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
-    limit_up = last_5['涨跌幅'] >= 9.8
-    if not limit_up.any():
-        return False  # 最近 5 天没有涨停则直接排除
+    # limit_up = last_5['涨跌幅'] >= 9.8
+    # if not limit_up.any():
+    #     return False  # 最近 5 天没有涨停则直接排除
 
     # 条件2：缩量
     if row['成交量'] >= row['avg_volume_5']:
@@ -44,17 +45,23 @@ def is_trend_pullback_star(df):
     # has_volume_spike = (last_15['成交量'] > last_15['avg_volume_10'] * 1.8).any()
     # if not has_volume_spike:
     #     return False
+    if row['涨跌幅']<-5:
+        return False
 
-    # 条件3：十字星（实体极小，总波动不大）
+    # K线实体小（十字 / 小阳）
+    lower_shadow = min(row['开盘价'], row['收盘价']) - row['最低价']
+    upper_shadow = row['最高价'] - max(row['开盘价'], row['收盘价'])
     entity = abs(row['收盘价'] - row['开盘价'])
     total_range = row['最高价'] - row['最低价']
-    if entity / row['收盘价'] > 0.008:  # 实体小于0.5%
+    if entity / row['收盘价'] > 0.02:
         return False
-    if total_range / row['收盘价'] > 0.04:  # 整体波动不大于4%
+
+    # 下影线 ≥ 实体（经典）
+    if lower_shadow < entity *1.3:
         return False
 
     # 条件4：过去15天中存在放量（放量日 > 当日10日均量 * 1.8）
-    last_15 = df.iloc[-16:-1].copy()
+    last_15 = df.iloc[-8:-1].copy()
     last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
     if not last_15['vol_spike'].any():
         return False
@@ -65,12 +72,13 @@ def is_trend_pullback_star(df):
 def select_stocks():
 
     """主函数：筛选符合条件的股票"""
-    stock_list = filter_stocks(close_min=12)
+    # stock_list = filter_stocks(close_min=12)
+    stock_list = filter_stocks()
     # stock_list=['601311']
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         df = get_kline(code)
-        if df is not None and is_trend_pullback_star(df):
+        if df is not None and (is_trend_pullback_star(df) or is_long_donw_line(df)):
             ##业绩涨的
             if is_up_yj(code):
                 result.append(code)

@@ -3,11 +3,16 @@ import re
 import akshare as ak
 from tqdm import tqdm
 from datetime import datetime, timedelta
+import time
 from tools.pandas_tools import parse_kline_to_dataframe
 from tools.send_request import send_request
 import pandas as pd
 import tushare as ts
 pro = ts.pro_api()
+import baostock as bs
+import efinance as ef
+lg = bs.login()
+
 def get_all_codes(remove_st=True, return_df=False):
     """
     获取沪深A股所有股票代码（可选择是否排除 ST 和退市股）
@@ -66,7 +71,6 @@ def filter_stocks(SZ_min = 130, SZ_max = 2000, HSL_min = 0.9, HSL_max = 18, LB_m
     return df["代码"].tolist()
 
 
-
 def get_kline_east(code):
     """
     股票详情 价格 开盘价 收盘价 量比等信息
@@ -92,6 +96,69 @@ def get_kline_east(code):
         return kline
     except:
         return None
+
+def get_kline_bs(code):
+    pass
+    today = datetime.today().strftime('%Y-%m-%d')
+    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y-%m-%d')
+    rs = bs.query_history_k_data_plus(f"{code}.{'SH' if code.startswith('6') else 'SZ'}",
+                                      "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,isST",
+                                      start_date=date_100_days_ago, end_date=today,
+                                      frequency="d", adjustflag="2")
+    df = rs.get_data()
+    float_fields = [
+        'open', 'high', 'low', 'close', 'preclose',
+        'volume', 'amount', 'adjustflag', 'turn',
+        'tradestatus', 'pctChg', 'isST'
+    ]
+    for field in float_fields:
+        if field in df.columns:
+            # 使用pd.to_numeric，错误值转为NaN
+            df[field] = pd.to_numeric(df[field], errors='coerce').round(2)
+    df['涨跌额'] = (df['close'] - df['preclose']).round(2)
+    rename_dict = {
+        'date': '日期',
+        'code': '股票代码',
+        'open': '开盘价',
+        'high': '最高价',
+        'low': '最低价',
+        'close': '收盘价',
+        'preclose': '前收盘价',
+        'volume': '成交量',
+        'amount': '成交额',
+        'adjustflag': '复权状态',
+        'turn': '换手率',
+        'tradestatus': '交易状态',
+        'pctChg': '涨跌幅',
+        'isST': '是否ST',
+        '涨跌额': '涨跌额'  # 也可以改成其他名字，比如'涨跌价格'
+    }
+
+    # 执行重命名
+    df.rename(columns=rename_dict, inplace=True)
+    # print(df)
+    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅', '换手率']]
+
+def get_kline_ef(code):
+    pass
+    today = datetime.today().strftime('%Y%m%d')
+    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
+    df=ef.stock.get_quote_history(code,beg=date_100_days_ago, end=today)
+    df.rename(columns={
+        "日期": "日期",
+        "开盘": "开盘价",
+        "收盘": "收盘价",
+        "最高": "最高价",
+        "最低": "最低价",
+        "成交量": "成交量",
+        "成交额": "成交额",
+        "振幅": "振幅",
+        "涨跌幅": "涨跌幅",
+        "涨跌额": "涨跌额",
+        "换手率": "换手率",
+        "股票代码": "股票代码"
+    }, inplace=True)
+    return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅', '换手率']]
 
 
 #get_kline_tushare
@@ -164,22 +231,25 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
         "换手率": "换手率",
         "股票代码": "股票代码"
     }, inplace=True)
-
-
+    # print(df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌幅', '换手率']])
     # 选择并返回指定字段
     return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅','换手率']]
 
 
 
-def get_kline(code, x='ak'):
+def get_kline(code, x='ef'):
     if x == 'ea':
         return get_kline_east(code)
     if x == 'tu':
         return get_kline_tushare(code)
     if x == 'ak':
         return get_kline_akshare(code)
+    if x == 'ef':
+        return get_kline_ef(code)
+    if x == 'bs':
+        return get_kline_bs(code)
     else:
-        return get_kline_akshare(code)
+        return get_kline_ef(code)
 
 def get_stock_code_by_name(code):
     if any(char.isdigit() for char in code):
@@ -209,13 +279,19 @@ def is_up_yj(code):
 
 if __name__ == '__main__':
     pass
-    ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
+    # ts.set_token('3a6f5838bb7ce7915a3022d0a1a6cc374fa4dcb0cc6a32b3d154f577')
     # ts.set_token('2876ea85cb005fb5fa17c809a98174f2d5aae8b1f830110a5ead6211')
-    print(get_kline('600580','ea'))
+    print(get_kline('600580','ef'))
+    print(get_kline('600580', 'bs'))
     # codes=filter_stocks()
+    # print(codes)
+    # print(len(codes))
+    # codes=get_all_codes()
+    # print(codes)
     # print(len(codes))
     # is_up_yj('600580')
     # filter_stocks()
+
 
 
 

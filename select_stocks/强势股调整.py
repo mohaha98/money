@@ -30,7 +30,7 @@ def is_strong_pullback(df):
     yesterday = df.iloc[-2]
 
     # ====== ✨新增：最近5天内出现涨停 ======
-    last_5 = df.tail(6)
+    last_5 = df.tail(7)
     # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
     limit_up = last_5['涨跌幅'] >= 9.8
     if not limit_up.any():
@@ -97,23 +97,6 @@ def is_strong_pullback(df):
     # #     print("满足小波动")
 
 
-    # -------- 条件7：当天换手率小于五日平均换手率 --------
-
-    # if yesterday['换手率'] >= yesterday['hs_5']:
-    #     # print('不满足换手率下降',today['hs_5'])
-    #     return False
-    # else:
-    #     print('满足换手率下降',today['hs_5'])
-
-    if abs(yesterday['涨跌幅']) >= 3 or today['涨跌幅'] < -0.5 or today['涨跌幅'] > 6:
-        # print(f"{today['涨跌幅']}")
-        return False
-    # else:
-    #     print('满足涨跌幅小于5%')
-
-
-    # if today['成交量'] > yesterday['成交量']*1.6 or today['换手率'] > yesterday['换手率']*2 or today['换手率'] < yesterday['换手率']:
-    #     return False
 
     return True
 
@@ -128,10 +111,10 @@ def select_stocks():
     result = []
     for code in tqdm(stock_list, desc="选股进度", bar_format="{l_bar}{bar:30}{r_bar}", colour="green"):
         try:
-            df = get_kline(code,'ak')
+            df = get_kline(code,'ef')
         except:
             time.sleep(1.5)
-            df=get_kline(code,'tu')
+            df=get_kline(code,'bs')
         if df is not None and is_strong_pullback(df):
             ##业绩涨的
 

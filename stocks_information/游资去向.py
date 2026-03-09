@@ -33,6 +33,6 @@ def main(date):
 
 
 if __name__ == '__main__':
-    date='20251225'
+    date='20260306'
     main(date)
     # print(DATA_DIR)
