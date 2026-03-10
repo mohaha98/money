@@ -3,6 +3,7 @@ import re
 import akshare as ak
 from tqdm import tqdm
 from datetime import datetime, timedelta
+from typing import Optional, Tuple
 import time
 from tools.pandas_tools import parse_kline_to_dataframe
 from tools.send_request import send_request
@@ -12,6 +13,28 @@ pro = ts.pro_api()
 import baostock as bs
 import efinance as ef
 lg = bs.login()
+
+
+def _get_date_range(start_date: Optional[str], end_date: Optional[str], fmt: str, default_days: int = 360) -> Tuple[str, str]:
+    """
+    统一处理开始/结束日期：
+    - end_date 为空则为今天
+    - start_date 为空则为 end_date 往前 default_days 天
+
+    日期格式由 fmt 控制，例如 "%Y%m%d" 或 "%Y-%m-%d"。
+    """
+    today = datetime.today()
+    if end_date:
+        end = datetime.strptime(end_date, fmt)
+    else:
+        end = today
+
+    if start_date:
+        start = datetime.strptime(start_date, fmt)
+    else:
+        start = end - timedelta(days=default_days)
+
+    return start.strftime(fmt), end.strftime(fmt)
 
 def get_all_codes(remove_st=True, return_df=False):
     """
@@ -71,19 +94,20 @@ def filter_stocks(SZ_min = 130, SZ_max = 2000, HSL_min = 0.9, HSL_max = 18, LB_m
     return df["代码"].tolist()
 
 
-def get_kline_east(code):
+def get_kline_east(code, start_date: Optional[str] = None, end_date: Optional[str] = None):
     """
     股票详情 价格 开盘价 收盘价 量比等信息
     [名字，今天收盘价，今天开盘价，昨天开盘价，昨天收盘价，量比]
+
+    日期格式：YYYYMMDD
     """
-    today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
+    beg, end = _get_date_range(start_date, end_date, "%Y%m%d")
     try:
         url = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
         payload = {'fields1':"f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13",
                    "fields2":"f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
-                   "beg": date_100_days_ago,
-                   "end": today,
+                   "beg": beg,
+                   "end": end,
                    "secid": f"{1 if code.startswith('6') else 0}.{code}",
                    "klt": "101",
                    "fqt": 1}
@@ -97,13 +121,11 @@ def get_kline_east(code):
     except:
         return None
 
-def get_kline_bs(code):
-    pass
-    today = datetime.today().strftime('%Y-%m-%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y-%m-%d')
+def get_kline_bs(code, start_date: Optional[str] = None, end_date: Optional[str] = None):
+    beg, end = _get_date_range(start_date, end_date, "%Y-%m-%d")
     rs = bs.query_history_k_data_plus(f"{code}.{'SH' if code.startswith('6') else 'SZ'}",
                                       "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,isST",
-                                      start_date=date_100_days_ago, end_date=today,
+                                      start_date=beg, end_date=end,
                                       frequency="d", adjustflag="2")
     df = rs.get_data()
     float_fields = [
@@ -139,11 +161,9 @@ def get_kline_bs(code):
     # print(df)
     return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅', '换手率']]
 
-def get_kline_ef(code):
-    pass
-    today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
-    df=ef.stock.get_quote_history(code,beg=date_100_days_ago, end=today)
+def get_kline_ef(code, start_date: Optional[str] = None, end_date: Optional[str] = None):
+    beg, end = _get_date_range(start_date, end_date, "%Y%m%d")
+    df=ef.stock.get_quote_history(code,beg=beg, end=end)
     df.rename(columns={
         "日期": "日期",
         "开盘": "开盘价",
@@ -162,15 +182,16 @@ def get_kline_ef(code):
 
 
 #get_kline_tushare
-def get_kline_tushare(code):
+def get_kline_tushare(code, start_date: Optional[str] = None, end_date: Optional[str] = None):
     """
     获取tushare的k线数据，
     数据有延迟，下午五点后才会有当天的数据
+
+    日期格式：YYYYMMDD
     """
-    today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
+    beg, end = _get_date_range(start_date, end_date, "%Y%m%d")
     pro = ts.pro_api()
-    df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=date_100_days_ago, end_date = today)
+    df = pro.daily(ts_code=f"{code}.{'SH' if code.startswith('6') else 'SZ'}", start_date=beg, end_date=end)
     # print(df)
     ##倒序
     df = df[::-1]
@@ -192,27 +213,19 @@ def get_kline_tushare(code):
     return df[['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '涨跌额', '涨跌幅']]
 
 
-def get_kline_akshare(code: str) -> pd.DataFrame:
+def get_kline_akshare(code: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:
     """
     获取 A 股股票的完整日 K 线数据（含复权、换手率等字段）
 
-    参数:
-        code (str): 股票代码（如 '600519'）
-        market (str): 市场类型，'sz' 或 'sh'
-        start_date (str): 开始日期，格式 'YYYYMMDD'（默认 '20240101'）
-        adjust (str): 复权方式，'qfq' 前复权，'hfq' 后复权，'None' 不复权
-
-    返回:
-        pandas.DataFrame: 包含完整K线字段
+    日期格式：YYYYMMDD
     """
     # 获取数据
-    today = datetime.today().strftime('%Y%m%d')
-    date_100_days_ago = (datetime.today() - timedelta(days=120)).strftime('%Y%m%d')
+    beg, end = _get_date_range(start_date, end_date, "%Y%m%d")
     df = ak.stock_zh_a_hist(
         symbol=code,
         period="daily",
-        start_date=date_100_days_ago,
-        end_date=today,
+        start_date=beg,
+        end_date=end,
         adjust='qfq'
     )
     #['日期', '开盘价', '收盘价', '最高价', '最低价', '成交量', '成交额', '振幅', '涨跌额', '涨跌幅', '换手率']
@@ -237,19 +250,32 @@ def get_kline_akshare(code: str) -> pd.DataFrame:
 
 
 
-def get_kline(code, x='ef'):
+def get_kline(code, x='ef', start_date: Optional[str] = None, end_date: Optional[str] = None):
+    """
+    统一获取K线入口：
+    - x='ea' 使用 东方财富
+    - x='tu' 使用 tushare
+    - x='ak' 使用 akshare
+    - x='ef' 使用 efinance
+    - x='bs' 使用 baostock
+
+    start_date / end_date 为空时，默认使用最近 100 个自然日到今天。
+    日期格式：
+      - 东方财富 / tushare / akshare / efinance: YYYYMMDD
+      - baostock: YYYY-MM-DD
+    """
     if x == 'ea':
-        return get_kline_east(code)
+        return get_kline_east(code, start_date, end_date)
     if x == 'tu':
-        return get_kline_tushare(code)
+        return get_kline_tushare(code, start_date, end_date)
     if x == 'ak':
-        return get_kline_akshare(code)
+        return get_kline_akshare(code, start_date, end_date)
     if x == 'ef':
-        return get_kline_ef(code)
+        return get_kline_ef(code, start_date, end_date)
     if x == 'bs':
-        return get_kline_bs(code)
+        return get_kline_bs(code, start_date, end_date)
     else:
-        return get_kline_ef(code)
+        return get_kline_ef(code, start_date, end_date)
 
 def get_stock_code_by_name(code):
     if any(char.isdigit() for char in code):

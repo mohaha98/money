@@ -37,7 +37,7 @@ def is_trend_pullback_star(df):
     #     return False  # 最近 5 天没有涨停则直接排除
 
     # 条件2：缩量
-    if row['成交量'] >= row['avg_volume_5']:
+    if row['成交量'] >= row['avg_volume_5']*1.2:
         return False
 
     # # 条件4：前期有放量（过去15天中，任意一天成交量 > 10日均量 * 1.8）
