@@ -37,7 +37,7 @@ def is_trend_pullback_star(df):
     #     return False  # 最近 5 天没有涨停则直接排除
 
     # 条件2：缩量
-    if row['成交量'] >= row['avg_volume_5']:
+    if row['成交量'] >= row['avg_volume_5']*1.2:
         return False
 
     # # 条件4：前期有放量（过去15天中，任意一天成交量 > 10日均量 * 1.8）
@@ -45,7 +45,7 @@ def is_trend_pullback_star(df):
     # has_volume_spike = (last_15['成交量'] > last_15['avg_volume_10'] * 1.8).any()
     # if not has_volume_spike:
     #     return False
-    if row['涨跌幅']<-5:
+    if row['涨跌幅']<-4:
         return False
 
     # K线实体小（十字 / 小阳）
@@ -53,16 +53,15 @@ def is_trend_pullback_star(df):
     upper_shadow = row['最高价'] - max(row['开盘价'], row['收盘价'])
     entity = abs(row['收盘价'] - row['开盘价'])
     total_range = row['最高价'] - row['最低价']
-    if entity / row['收盘价'] > 0.02:
-        return False
 
-    # 下影线 ≥ 实体（经典）
-    if lower_shadow < entity *1.3:
-        return False
+
+    # # 下影线 ≥ 实体（经典）
+    # if lower_shadow < entity:
+    #     return False
 
     # 条件4：过去15天中存在放量（放量日 > 当日10日均量 * 1.8）
     last_15 = df.iloc[-8:-1].copy()
-    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.8
+    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 2
     if not last_15['vol_spike'].any():
         return False
 

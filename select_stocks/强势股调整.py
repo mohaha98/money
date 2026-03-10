@@ -8,100 +8,45 @@ from tools.send_email import send_email
 from tools.logger import log
 
 def is_strong_pullback(df):
-
-    # print(df)
+    """
+    强势股调整期模型：
+    1）最后一个交易日均线多头：MA5 > MA10 > MA20 且 收盘价 > MA20
+    2）前 7 个交易日内有放巨量：存在成交量 > 当日 5 日均量 * 1.8
+    3）当前为调整期：收盘价不破 10 日均线，且成交量在 5 日均量 ±20% 区间
+    """
     if len(df) < 30:
         return False
-    """
-    判断是否符合“强势回踩 + 缩量止跌”选股模型
-    
-    """
-    # df = df.iloc[:-1].copy()
-    # 价格、均线、涨幅
-    df['ma5'] = df['收盘价'].rolling(5).mean()
-    df['ma10'] = df['收盘价'].rolling(10).mean()
-    df['ma20'] = df['收盘价'].rolling(20).mean()
-    df['avg_volume_5'] = df['成交量'].rolling(5).mean()
-    df['avg_volume_10'] = df['成交量'].rolling(10).mean()
-    # df['hs_5'] = df['换手率'].rolling(5).mean()
-    # df['hs_10'] = df['换手率'].rolling(10).mean()
+
+    df = df.copy()
+
+    # ===== 均线 & 均量 =====
+    df["ma5"] = df["收盘价"].rolling(5).mean()
+    df["ma10"] = df["收盘价"].rolling(10).mean()
+    df["ma20"] = df["收盘价"].rolling(20).mean()
+    df["vol_ma5"] = df["成交量"].rolling(5).mean()
 
     today = df.iloc[-1]
-    yesterday = df.iloc[-2]
 
-    # ====== ✨新增：最近5天内出现涨停 ======
-    last_5 = df.tail(7)
-    # A股涨停判断：涨跌幅≥9.8%（考虑非完全封板情况）
-    limit_up = last_5['涨跌幅'] >= 9.8
-    if not limit_up.any():
-        return False  # 最近 5 天没有涨停则直接排除
-
-    # -------- 条件1：均线多头排列 --------
-    if not (today['ma5'] > today['ma10'] > today['ma20'] and today['收盘价'] > today['ma20']):
-        # print('不满足多头')
-        return False
-    # else:
-    #     print('满足多头')
-    #     print(today['收盘价'],today['ma20'])
-
-    # -------- 条件2：过去12天中存在放量（放量日 > 当日12日均量 * 1.8） --------
-    last_15 = df.iloc[-12:-1].copy()
-    last_15['vol_spike'] = last_15['成交量'] > last_15['avg_volume_10'] * 1.7
-    if not last_15['vol_spike'].any():
-        # print('不满足前期放量')
-        return False
-    # else:
-    #     print('满足前期放量')
-    # --- 1. 前期有明显上涨 ---
-    if (last_15['收盘价'].max() - last_15['收盘价'].min()) / last_15['收盘价'].min() < 0.14:  # 涨幅至少10%
+    # ① 多头：均线多头 + 收盘价在趋势线上方
+    if not (today["ma5"] > today["ma10"] > today["ma20"] and today["收盘价"] > today["ma20"]):
         return False
 
-
-    # 条件3：十字星（实体极小，总波动不大）
-    entity = abs(today['收盘价'] - today['开盘价'])
-    total_range = today['最高价'] - today['最低价']
-    if entity / today['收盘价'] > 0.008:  # 实体小于0.5%
+    # ② 前 7 个交易日内有放巨量（不含今天）
+    last_7 = df.iloc[-8:-1].copy()
+    last_7["is_spike"] = last_7["成交量"] > last_7["vol_ma5"] * 1.8
+    if not last_7["is_spike"].any():
         return False
-    if total_range / today['收盘价'] > 0.04:  # 整体波动不大于4%
+
+    # ③ 当前为调整期
+    #    - 收盘价不破 10 日均线
+    #    - 成交量在 5 日均量附近 ±20%
+    if today["收盘价"] < today["ma10"]:
         return False
-    # # -------- 条件3：价格在 五日线或者十日线2个点距离内 --------
-    # if not (
-    #     abs(yesterday['收盘价'] - yesterday['ma5']) / yesterday['ma5'] < 0.046 or
-    #     abs(yesterday['收盘价'] - yesterday['ma10']) / yesterday['ma10'] < 0.046
-    # ):
-    #     # print('不满足价格在均线附近',abs(today['收盘价'] - today['ma10']) / today['ma10'])
-    #     return False
-    # # else:
-    #     print('满足价格在均线附近')
 
-    # -------- 条件4：缩量（当天成交量小于5日平均成交量） --------
-    if today['成交量'] >= today['avg_volume_5']:
-        # print(today['成交量'],today['avg_volume_5'])
-        # print('不满足缩量')
+    if not (0.8 * today["vol_ma5"] <= today["成交量"] <= 1.2 * today["vol_ma5"]):
         return False
-    # else:
-    #     print('满足缩量')
-
-    # # -------- 条件5：当天k线实体小于价格的1.8% --------
-    # body = abs(today['收盘价'] - today['开盘价'])
-    # if body / today['收盘价'] > 0.02:
-    #     # print('不满足小实体')
-    #     return False
-    # # else:
-    # #     print('满足小实体')
-
-    # # -------- 条件6：当天价格整体波动不大于4% --------
-    # if (yesterday['最高价'] - yesterday['最低价']) / yesterday['收盘价'] >= 0.053:
-    #     return False
-    # # else:
-    # #     print("满足小波动")
-
-
 
     return True
-
-
-
 
 def select_stocks():
 
