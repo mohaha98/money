@@ -1,0 +1,23 @@
+[2025/10/29 18:50:13] - [INFO] - 长度是9
+[2025/10/29 18:50:13] - [INFO] - ['301217', '601012', '002895', '603185', '600096', '300049', '601208', '002378', '300573']
+[2025/10/29 18:56:13] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 18:56:13] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1}
+[2025/10/29 18:56:13] - [ERROR] - response:None
+[2025/10/29 18:59:06] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 18:59:06] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1}
+[2025/10/29 18:59:06] - [ERROR] - response:None
+[2025/10/29 19:00:28] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 19:00:28] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1}
+[2025/10/29 19:00:28] - [ERROR] - response:None
+[2025/10/29 19:02:19] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 19:02:19] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1, 'ut': 'fa5fd1943c7b386f172d6893dbfba10b'}
+[2025/10/29 19:02:19] - [ERROR] - response:None
+[2025/10/29 19:03:04] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 19:03:04] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1, 'ut': 'fa5fd1943c7b386f172d6893dbfba10b', 'cd': 'jQuery35105855188136017154_1761735518736'}
+[2025/10/29 19:03:04] - [ERROR] - response:None
+[2025/10/29 19:03:19] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 19:03:19] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1}
+[2025/10/29 19:03:19] - [ERROR] - response:None
+[2025/10/29 19:09:39] - [ERROR] - url:https://push2his.eastmoney.com/api/qt/stock/kline/get--请求发生异常：('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+[2025/10/29 19:09:39] - [ERROR] - body:{'fields1': 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13', 'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61', 'beg': '20250701', 'end': '20251029', 'secid': '1.600580', 'klt': '101', 'fqt': 1}
+[2025/10/29 19:09:39] - [ERROR] - response:None

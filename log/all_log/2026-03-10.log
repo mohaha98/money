@@ -1,0 +1,5 @@
+[2026/03/10 20:03:33] - [WARNING] - Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000001CDD2C34FD0>, 'Connection to searchapi.eastmoney.com timed out. (connect timeout=180)')': /api/suggest/get?input=600172&type=14&token=D43BF722C8E33BDC906FB84D85E326E8&count=5
+[2026/03/10 20:04:23] - [INFO] - 长度是21
+[2026/03/10 20:04:23] - [INFO] - ['000534', '000657', '603530', '603063', '600549', '600483', '600775', '002842', '002378', '601958', '300001', '002085', '600482', '300827', '600732', '600590', '001896', '601179', '000400', '000682', '000893']
+[2026/03/10 21:03:01] - [INFO] - 长度是16
+[2026/03/10 21:03:01] - [INFO] - ['300903', '600118', '000729', '603530', '603063', '600775', '601026', '600732', '600590', '002913', '000099', '000158', '600703', '300763', '600673', '001696']
